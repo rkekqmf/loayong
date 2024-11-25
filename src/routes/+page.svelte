@@ -1,2 +1,1 @@
-<h1>Deploy test</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<h1 class="text-2xl font-bold text-white">TEST DEV</h1>
