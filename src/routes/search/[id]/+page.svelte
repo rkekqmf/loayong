@@ -2,13 +2,18 @@
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Chart from './chart.svelte';
+	import Revolution from '$lib/components/revolution.svelte';
+	import Ggadal from '$lib/components/ggadal.svelte';
+	import Jump from '$lib/components/jump.svelte';
 
 	let data: any;
 	let chartData: any = [];
-
+	let activeTab = 'revolution';
+	let arkPassiveData: any;
 	const fetchData = async (id: string) => {
 		console.log(`Fetching data for ID: ${id}`);
 		const url = `https://developer-lostark.game.onstove.com/armories/characters/${id}/profiles`;
+		const arkPassiveUrl = `https://developer-lostark.game.onstove.com/armories/characters/${id}/arkpassive`;
 		const options = {
 			method: 'GET',
 			headers: {
@@ -28,8 +33,13 @@
 
 		try {
 			const response = await fetch(url, options);
+			const arkPassiveResponse = await fetch(arkPassiveUrl, options);
+
 			if (response.ok) {
 				const responseData = await response.json();
+				arkPassiveData = await arkPassiveResponse.json();
+				console.log('아크패시브 데이터:', arkPassiveData);
+
 				data = responseData;
 				chartData = [
 					{ axis: '레벨', value: (Number(responseData.ItemMaxLevel.replace(/,/g, '')) / maxValues.레벨) * 100, originalValue: responseData.ItemMaxLevel, maxValue: maxValues.레벨 },
@@ -63,16 +73,55 @@
 {#await data}
 	<p>Loading...</p>
 {:then loadedData}
-	<div class="flex flex-col items-center justify-center overflow-auto p-10 md:flex-row">
-		<div class="flex flex-col items-center justify-center">
-			<p class="text-2xl font-bold text-black">
-				<span class="text-lime-500">{loadedData.GuildName}</span><span class="text-pink-500">{loadedData.Title}</span>
-				{loadedData.CharacterName} <span class="text-red-300">{loadedData.CharacterClassName}</span>
-			</p>
-			<img src={loadedData.CharacterImage} alt="item" />
+	<div class="flex h-full">
+		<div class="flex-1">
+			<div class="chartContainer flex flex-col items-center justify-center">
+				<p class="text-2xl font-bold text-white">
+					<span class="text-lime-500">{loadedData.GuildName}</span><span class="text-pink-500">{loadedData.Title}</span>
+					{loadedData.CharacterName} <span class="text-red-300">{loadedData.CharacterClassName}</span>
+				</p>
+				<img width="200" src={loadedData.CharacterImage} alt="item" class="character-image" />
+			</div>
+			<Chart data={chartData} />
 		</div>
-		<Chart data={chartData} />
+
+		<div class="flex-[3]">
+			<div class="mb-4 flex justify-center gap-4">
+				<button class="px-4 py-2 {activeTab === 'revolution' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'revolution')}> Revolution </button>
+				<button class="px-4 py-2 {activeTab === 'ggadal' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'ggadal')}> Ggadal </button>
+				<button class="px-4 py-2 {activeTab === 'jump' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'jump')}> Jump </button>
+			</div>
+
+			<div class="tab-content">
+				{#if activeTab === 'revolution'}
+					<Revolution data={arkPassiveData} />
+				{:else if activeTab === 'ggadal'}
+					<Ggadal data={arkPassiveData} />
+				{:else if activeTab === 'jump'}
+					<Jump data={arkPassiveData} />
+				{/if}
+			</div>
+		</div>
 	</div>
 {:catch error}
 	<p>Error loading data: {error.message}</p>
 {/await}
+
+<style>
+	.chartContainer {
+		width: 100%;
+		height: 400px;
+		margin: 0 auto;
+		box-shadow:
+			inset 0 -3px 10px rgba(0, 0, 0, 0.4),
+			inset 0 3px 10px rgba(255, 255, 255, 0.4),
+			0 3px 8px rgba(0, 0, 0, 0.3);
+		background: #171a20;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.character-image {
+		filter: brightness(1.1);
+	}
+</style>
