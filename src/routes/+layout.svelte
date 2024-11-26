@@ -76,7 +76,7 @@
 	</div>
 </nav>
 
-<main class="relative mx-auto mt-20 max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+<main class="relative mx-auto mt-20 min-h-[calc(100vh-180px)] px-4 py-8 sm:px-6 lg:px-8">
 	<!-- 메인 컨텐츠 배경 -->
 	<div class="absolute inset-0 rounded-xl"></div>
 
@@ -86,11 +86,11 @@
 	</div>
 </main>
 
-<footer class="flex w-full flex-col items-center gap-[1.2rem] bg-gradient-to-b from-green-800 to-green-900 px-[1.6rem] py-[1rem] text-[1.2rem] text-[#ccc] shadow-2xl backdrop-blur-sm">
-	<div class="tb:text-[1rem] flex items-center justify-center gap-4">
+<footer class="fixed bottom-0 flex w-full flex-col items-center gap-[1.2rem] bg-gradient-to-b from-green-800 to-green-900 px-[1.6rem] py-[1rem] text-[1.2rem] text-[#ccc] shadow-2xl backdrop-blur-sm">
+	<div class="flex items-center justify-center gap-4 text-[1rem]">
 		<span>© Copyright 2024</span>
 		<div class="divider"></div>
-		<span>서씨</span>
+		<span>서모씨</span>
 		<div class="divider"></div>
 		<span>All Rights Reserved</span>
 	</div>
