@@ -3,9 +3,11 @@
 	import * as d3 from 'd3';
 
 	export let data;
+	let chartContainer;
+	let width = 0;
+	let height = 0;
 
-	// 데이터가 변경될 때마다 차트를 그립니다.
-	$: if (data) {
+	$: if (data && width && height) {
 		drawChart();
 	}
 
@@ -13,8 +15,6 @@
 		// 기존의 차트를 제거합니다.
 		d3.select('#radarChart').selectAll('svg').remove();
 
-		const width = 600;
-		const height = 600;
 		const radius = Math.min(width, height) / 2 - 50;
 		const levels = 5;
 		const angleSlice = (Math.PI * 2) / data.length;
@@ -83,12 +83,19 @@
 	}
 
 	onMount(() => {
-		// 초기 데이터 로드 및 차트 그리기
-		drawChart();
+		const resizeObserver = new ResizeObserver((entries) => {
+			for (let entry of entries) {
+				width = entry.contentRect.width;
+				height = entry.contentRect.height;
+			}
+		});
+
+		resizeObserver.observe(chartContainer);
+		return () => resizeObserver.disconnect();
 	});
 </script>
 
-<div class="chartContainer">
+<div class="chartContainer rounded-xl bg-gradient-to-b from-green-800 to-green-900" bind:this={chartContainer}>
 	<div id="radarChart"></div>
 </div>
 
@@ -97,8 +104,30 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: 100vh;
+		width: 100%;
+		height: 400px;
+		max-width: 600px;
+		margin: 0 auto;
+		box-shadow:
+			inset 0 -3px 10px rgba(0, 0, 0, 0.4),
+			inset 0 3px 10px rgba(255, 255, 255, 0.4),
+			0 3px 8px rgba(0, 0, 0, 0.3);
+		background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%), linear-gradient(to bottom, #166534, #14532d);
+		position: relative;
+		overflow: hidden;
 	}
+
+	.chartContainer::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 50%;
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+		pointer-events: none;
+	}
+
 	.tooltip {
 		pointer-events: none;
 	}
