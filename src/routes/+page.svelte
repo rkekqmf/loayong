@@ -1,1 +1,5 @@
-<h1 class="text-2xl font-bold text-white">TEST DEV</h1>
+<script>
+	import Home from './home/+page.svelte';
+</script>
+
+<Home />

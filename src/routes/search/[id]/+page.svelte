@@ -38,6 +38,7 @@
 			if (response.ok) {
 				const responseData = await response.json();
 				arkPassiveData = await arkPassiveResponse.json();
+				console.log(responseData);
 				console.log('아크패시브 데이터:', arkPassiveData);
 
 				data = responseData;
@@ -94,11 +95,11 @@
 
 			<div class="tab-content">
 				{#if activeTab === 'revolution'}
-					<Revolution data={arkPassiveData} />
+					<Revolution data={arkPassiveData} characterClassName={loadedData.CharacterClassName} />
 				{:else if activeTab === 'ggadal'}
-					<Ggadal data={arkPassiveData} />
+					<Ggadal data={arkPassiveData} characterClassName={loadedData.CharacterClassName} />
 				{:else if activeTab === 'jump'}
-					<Jump data={arkPassiveData} />
+					<Jump data={arkPassiveData} characterClassName={loadedData.CharacterClassName} />
 				{/if}
 			</div>
 		</div>

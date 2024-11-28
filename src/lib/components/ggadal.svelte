@@ -1,6 +1,12 @@
 <script>
+	import { classData } from '$lib/data/classData';
+	export let characterClassName;
 	export let data;
-	const allNumbers = [{ type: 'ggadal', num: 6 }, { type: 'ggadal', num: 18 }, { type: 'ggadal', num: 21 }, { type: 'ggadal', num: 23 }, ...Array.from({ length: 8 }, (_, i) => ({ type: 'doyak', num: i + 1 }))];
+
+	// 해당 클래스의 깨달음 이미지 번호 가져오기
+	const classGgadalImages = classData[characterClassName]?.ggadal.class || [];
+	const folder01GgadalImages = classData[characterClassName]?.ggadal.folder01 || [];
+	const folder02GgadalImages = classData[characterClassName]?.ggadal.folder02 || [];
 
 	const gridPositions = [
 		'col-start-2 row-start-1',
@@ -26,11 +32,6 @@
 		return match ? parseInt(match[1]) : null;
 	}
 
-	$: {
-		console.log('Effects data:', data?.Effects);
-		console.log('Ggadal data:', ggadalData);
-	}
-
 	$: ggadalData =
 		data?.Effects?.filter((effect) => effect.Name === '깨달음')?.map((effect) => ({
 			iconNum: extractNumberFromUrl(effect.Icon)
@@ -38,26 +39,46 @@
 </script>
 
 <section class="chartContainer">
-	<h2 class="mb-6 inline-block border-b-2 border-blue-500 pb-2 text-2xl text-gray-800">깨달음 & 도약</h2>
+	<h2 class="mb-6 inline-block border-b-2 border-blue-500 pb-2 text-2xl text-gray-800">깨달음</h2>
 	<div class="grid-layout">
-		{#each allNumbers as item, i}
-			{@const ggadalInfo = ggadalData.find((data) => data.iconNum === item.num)}
+		{#each folder01GgadalImages as imageNum, i}
+			{@const ggadalInfo = ggadalData.find((data) => data.iconNum === imageNum)}
 			<div class="relative {gridPositions[i]}">
 				<img
-					src="https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_01/ark_passive_01_{item.num}.png"
-					alt="깨달음 {item.num}"
+					src="/ark_passive/01/{imageNum}.png"
+					alt="깨달음 {imageNum}"
 					on:error={handleImageError}
 					class="h-20 w-20 rounded-md border border-gray-200 {ggadalInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
 					style="opacity: {ggadalInfo ? '1' : '0.5'}"
-					title={item.num.toString()}
+					title={imageNum.toString()}
 				/>
+			</div>
+		{/each}
+
+		{#each folder02GgadalImages as imageNum, i}
+			{@const ggadalInfo = ggadalData.find((data) => data.iconNum === imageNum)}
+			<div class="relative {gridPositions[i]}">
 				<img
-					src="https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_ac/ark_passive_ac_{item.num}.png"
-					alt="도약 {item.num}"
+					src="/ark_passive/02/{imageNum}.png"
+					alt="깨달음 {imageNum}"
 					on:error={handleImageError}
-					class="absolute left-0 top-0 h-20 w-20 rounded-md border border-gray-200 {ggadalInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
+					class="h-20 w-20 rounded-md border border-gray-200 {ggadalInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
 					style="opacity: {ggadalInfo ? '1' : '0.5'}"
-					title={item.num.toString()}
+					title={imageNum.toString()}
+				/>
+			</div>
+		{/each}
+
+		{#each classGgadalImages as imageNum, i}
+			{@const ggadalInfo = ggadalData.find((data) => data.iconNum === imageNum)}
+			<div class="relative {gridPositions[i]}">
+				<img
+					src="/ark_passive/{classData[characterClassName].code}/{imageNum}.png"
+					alt="깨달음 {imageNum}"
+					on:error={handleImageError}
+					class="h-20 w-20 rounded-md border border-gray-200 {ggadalInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
+					style="opacity: {ggadalInfo ? '1' : '0.5'}"
+					title={imageNum.toString()}
 				/>
 			</div>
 		{/each}

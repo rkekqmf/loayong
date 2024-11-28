@@ -1,7 +1,7 @@
 <script>
+	import { classData, commonRevolutionImages } from '$lib/data/classData';
 	export let data;
-
-	const numbers = [1, 2, 3, 4, 5, 6, 12, 14, 16, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 32, 33, 34, 35, 38];
+	export let characterClassName;
 
 	function handleImageError(event) {
 		event.target.style.display = 'none';
@@ -26,7 +26,6 @@
 		return '';
 	}
 
-	// data가 변경될 때마다 evolutionData를 다시 계산
 	$: evolutionData =
 		data?.Effects?.filter((effect) => effect.Name === '진화')?.map((effect) => ({
 			iconNum: extractNumberFromUrl(effect.Icon),
@@ -38,11 +37,11 @@
 <section class="chartContainer">
 	<h2 class="mb-6 inline-block border-b-2 border-emerald-500 pb-2 text-2xl text-gray-800">진화</h2>
 	<div class="grid grid-cols-6 gap-3 rounded-lg bg-gray-50 p-4">
-		{#each numbers as num}
+		{#each commonRevolutionImages as num}
 			{@const evolutionInfo = evolutionData.find((data) => data.iconNum === num)}
 			<div class="relative">
 				<img
-					src="https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_evolution/ark_passive_evolution_{num}.png"
+					src="/ark_passive/00/{num}.png"
 					alt="진화 {num}"
 					on:error={handleImageError}
 					class="h-20 w-20 rounded-md border border-gray-200 {evolutionInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"

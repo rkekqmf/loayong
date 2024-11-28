@@ -1,8 +1,12 @@
 <script>
+	import { classData } from '$lib/data/classData';
+	export let characterClassName;
 	export let data;
-	const numbers = [54, 10];
-	const jumpNumber = [1, 2, 3, 5];
-	const testNumbers = [9, 10, 11, 12];
+
+	// 해당 클래스의 도약 이미지 번호 가져오기
+	const classJumpImages = classData[characterClassName]?.jump.class || [];
+	const folder01JumpImages = classData[characterClassName]?.jump.folder01 || [];
+	const folder02JumpImages = classData[characterClassName]?.jump.folder02 || [];
 
 	function handleImageError(event) {
 		event.target.style.display = 'none';
@@ -27,10 +31,10 @@
 <section class="chartContainer">
 	<h2 class="mb-6 inline-block border-b-2 border-blue-500 pb-2 text-2xl text-gray-800">도약</h2>
 	<div class="flex flex-wrap gap-3 rounded-lg bg-gray-50 p-4">
-		{#each numbers as num}
+		{#each folder01JumpImages as num}
 			{@const jumpInfo = jumpData.find((data) => data.iconNum === num)}
 			<img
-				src="https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_01/ark_passive_01_{num}.png"
+				src="/ark_passive/01/{num}.png"
 				alt="도약 {num}"
 				on:error={handleImageError}
 				class="h-20 w-20 rounded-md border border-gray-200 {jumpInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
@@ -39,10 +43,10 @@
 			/>
 		{/each}
 
-		{#each jumpNumber as num}
+		{#each folder02JumpImages as num}
 			{@const jumpInfo = jumpData.find((data) => data.iconNum === num)}
 			<img
-				src="https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_02/ark_passive_02_{num}.png"
+				src="/ark_passive/02/{num}.png"
 				alt="도약 {num}"
 				on:error={handleImageError}
 				class="h-20 w-20 rounded-md border border-gray-200 {jumpInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
@@ -51,10 +55,10 @@
 			/>
 		{/each}
 
-		{#each testNumbers as num}
+		{#each classJumpImages as num}
 			{@const jumpInfo = jumpData.find((data) => data.iconNum === num)}
 			<img
-				src="https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_ac/ark_passive_ac_{num}.png"
+				src="/ark_passive/{classData[characterClassName].code}/{num}.png"
 				alt="도약 {num}"
 				on:error={handleImageError}
 				class="h-20 w-20 rounded-md border border-gray-200 {jumpInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
