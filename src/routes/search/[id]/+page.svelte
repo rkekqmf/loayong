@@ -78,11 +78,24 @@
 </script>
 
 {#if isLoading}
-	<div class="flex h-64 items-center justify-center">
-		<p class="text-lg">데이터를 불러오는 중...</p>
+	<div class="flex h-full w-full">
+		<div class="flex-1">
+			<div class="chartContainer flex flex-col items-center justify-center">
+				<p class="text-lg">데이터를 불러오는 중...</p>
+			</div>
+			<div class="chartContainer rounded-xl bg-gradient-to-b from-green-800 to-green-900"></div>
+		</div>
+		<div class="flex-[3]">
+			<div class="mb-4 flex justify-center gap-4">
+				<button class="px-4 py-2 {activeTab === 'revolution' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'revolution')}> Revolution </button>
+				<button class="px-4 py-2 {activeTab === 'ggadal' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'ggadal')}> Ggadal </button>
+				<button class="px-4 py-2 {activeTab === 'jump' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'jump')}> Jump </button>
+			</div>
+			<div class="h-[765px] w-full bg-red-100"></div>
+		</div>
 	</div>
 {:else if data}
-	<div class="flex h-full">
+	<div class="flex h-full w-full">
 		<div class="flex-1">
 			<div class="chartContainer flex flex-col items-center justify-center">
 				<p class="text-2xl font-bold text-white">
