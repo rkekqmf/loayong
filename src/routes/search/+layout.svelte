@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { Chevron_left, Chevron_right } from 'svelte-google-materialdesign-icons';
+	import { Chevron_left, Chevron_right } from '@svelte-material-design-icons/all';
 	import { page } from '$app/stores';
 	import { searchStore } from '$lib/store/store';
-	import { goto } from '$app/navigation';
 	let isLoading = false;
 	let data: any[] = [];
 	let selectedId = '';
@@ -101,6 +100,7 @@
 </script>
 
 {#if !isLoading}
+	<select 
 	<select class="h-[40px] w-[320px] rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500" bind:value={selectedId} on:change={(e) => handleSelectChange(e.currentTarget.value)}>
 		{#each sortedCharacters as { CharacterName, CharacterClassName, ItemAvgLevel }}
 			<option value={CharacterName}>
@@ -115,9 +115,6 @@
 <div class="flex w-full items-center justify-center gap-8 p-8">
 	<button on:click={() => moveToCharacter('prev')} class="cursor-pointer">
 		<Chevron_left size="100" />
-	</button>
-	<slot />
-	<button on:click={() => moveToCharacter('next')} class="cursor-pointer">
+	<div><Chevron_left size="100" /></div>
 		<Chevron_right size="100" />
-	</button>
-</div>
+	<div><Chevron_right size="100" /></div>
