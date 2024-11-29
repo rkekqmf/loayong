@@ -80,10 +80,10 @@
 {#if isLoading}
 	<div class="flex h-full w-full">
 		<div class="flex-1">
-			<div class="chartContainer flex flex-col items-center justify-center">
+			<div class="flex flex-col items-center justify-center bg-[#334b33]">
 				<p class="text-lg">데이터를 불러오는 중...</p>
 			</div>
-			<div class="chartContainer rounded-xl bg-gradient-to-b from-green-800 to-green-900"></div>
+			<div class="bg-[#334b33]"></div>
 		</div>
 		<div class="flex-[3]">
 			<div class="mb-4 flex justify-center gap-4">
