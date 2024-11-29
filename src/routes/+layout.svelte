@@ -46,20 +46,12 @@
 	<div class="radial-gradient"></div>
 </div>
 
-<nav class="fixed top-0 z-50 w-full bg-gradient-to-t from-green-950 to-green-900 shadow-2xl backdrop-blur-sm">
-	<div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-		<div class="flex items-center gap-20">
-			<div class="flex-shrink-0">
-				<a href="/" class="text-2xl font-bold text-white transition-colors hover:text-emerald-300">
-					<span class="">ti</span> tle
-				</a>
-			</div>
-		</div>
-	</div>
+<nav class="fixed top-0 z-50 flex min-h-[65px] w-full items-center justify-center border-b-2 border-[#b1e0b8] bg-[#1e3b28] shadow-[0_12px_8px_rgba(63,127,77,0.3)] backdrop-blur-sm">
+	<a href="/" class="text-2xl font-bold text-white transition-colors hover:text-emerald-300"> 안녕하세용 제목입니당 </a>
 </nav>
 
 <main class="background relative mx-auto mt-20 flex min-h-[calc(100vh-180px)] max-w-[2000px] flex-col items-center justify-center gap-12">
-	<div class="flex h-[100px] w-[2000px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">AD</div>
+	<div class="flex h-[100px] w-[2000px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">안녕하세용 광고입니당</div>
 	<!-- 실제 컨텐츠 -->
 	<div class="text-left">
 		<div class="description text-xl text-white">안녕하세용 테스트입니다</div>
@@ -83,7 +75,7 @@
 						 pl-20 pr-4 text-2xl text-[#ccc]
 						 placeholder-[#707a89] transition-all duration-200
 						 ease-in-out hover:bg-[#4b805b] hover:placeholder-[#ccc]"
-				placeholder="닉네임..."
+				placeholder="안녕하세용 검색입니당"
 				bind:value={searchQuery}
 				onkeydown={(e) => e.key === 'Enter' && handleSearch()}
 			/>
@@ -95,24 +87,24 @@
 	</div>
 
 	<div class="flex gap-12">
-		<div class="flex h-[700px] w-[350px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">AD</div>
+		<div class="flex h-[700px] w-[350px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">안녕하세용 AD입니당</div>
 
 		<div class="box_area relative" style="height: 830px">
 			{@render children()}
 		</div>
 		<div class="flex flex-col gap-4">
 			<div class="box_area relative" style="height: 300px">
-				<h2 class="text-center text-4xl font-medium text-white">안녕하세용 테스트입니다</h2>
+				<h2 class="text-center text-4xl font-medium text-white">안녕하세용 컴포넌트입니다</h2>
 			</div>
 			<div class="box_area relative" style="height: 500px">
-				<h2 class="text-center text-4xl font-medium text-white">안녕하세용 테스트입니다</h2>
+				<h2 class="text-center text-4xl font-medium text-white">안녕하세용 컴포넌트입니다</h2>
 			</div>
 		</div>
-		<div class="flex h-[300px] w-[350px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">AD</div>
+		<div class="flex h-[300px] w-[350px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">안녕하세용 AD입니당</div>
 	</div>
 </main>
 
-<footer class="fixed bottom-0 flex w-full flex-col items-center gap-[1.2rem] bg-gradient-to-b from-green-800 to-green-900 px-[1.6rem] py-[1rem] text-[1.2rem] text-[#ccc] shadow-2xl backdrop-blur-sm">
+<footer class="fixed bottom-0 flex w-full flex-col items-center gap-[1.2rem] bg-[rgb(36,73,44)] px-[1.6rem] py-[1rem] text-[1.2rem] text-[#ccc] shadow-[0_-4px_4px_rgba(63,127,77,0.3)] backdrop-blur-sm">
 	<div class="flex items-center justify-center gap-4 text-[1rem]">
 		<span>© Copyright 2024</span>
 		<div class="divider"></div>
