@@ -89,17 +89,20 @@
 	<div class="flex gap-12">
 		<div class="flex h-[700px] w-[350px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">안녕하세용 AD입니당</div>
 
-		<div class="box_area relative" style="height: 830px">
+		<div class="box_area relative mt-10" style="height: 830px">
 			{@render children()}
 		</div>
-		<div class="flex flex-col gap-4">
-			<div class="box_area relative" style="height: 300px">
-				<h2 class="text-center text-4xl font-medium text-white">안녕하세용 컴포넌트입니다</h2>
+		{#if !$page.url.pathname.startsWith('/search')}
+			<div class="flex flex-col gap-4">
+				<div class="box_area relative" style="height: 300px">
+					<h2 class="text-center text-4xl font-medium text-white">안녕하세용 컴포넌트입니다</h2>
+				</div>
+				<div class="box_area relative" style="height: 500px">
+					<h2 class="text-center text-4xl font-medium text-white">안녕하세용 컴포넌트입니다</h2>
+				</div>
 			</div>
-			<div class="box_area relative" style="height: 500px">
-				<h2 class="text-center text-4xl font-medium text-white">안녕하세용 컴포넌트입니다</h2>
-			</div>
-		</div>
+		{/if}
+
 		<div class="flex h-[300px] w-[350px] items-center justify-center rounded-md bg-[#1b3925] px-4 py-2 text-4xl text-white">안녕하세용 AD입니당</div>
 	</div>
 </main>
@@ -132,7 +135,8 @@
 	}
 
 	.box_area {
-		width: 600px;
+		min-width: 600px;
+		max-width: 1400px;
 		height: 800px;
 		display: flex;
 		flex-direction: column;

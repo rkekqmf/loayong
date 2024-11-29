@@ -78,7 +78,7 @@
 </script>
 
 {#if isLoading}
-	<div class="flex h-full w-full">
+	<div class="mt-20 flex h-full w-full">
 		<div class="flex-1">
 			<div class="flex flex-col items-center justify-center bg-[#334b33]">
 				<p class="text-lg">데이터를 불러오는 중...</p>

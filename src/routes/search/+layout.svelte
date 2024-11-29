@@ -101,23 +101,31 @@
 </script>
 
 {#if !isLoading}
-	<select class="h-[40px] w-[320px] rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500" bind:value={selectedId} on:change={(e) => handleSelectChange(e.currentTarget.value)}>
-		{#each sortedCharacters as { CharacterName, CharacterClassName, ItemAvgLevel }}
-			<option value={CharacterName}>
-				{CharacterName} [{CharacterClassName}] - {ItemAvgLevel}
-			</option>
-		{/each}
-	</select>
+	<div class="mb-10 flex items-center justify-center">
+		<select class="h-[40px] min-h-[40px] w-[320px] rounded-md border border-[#65ad7a] bg-[#3a6346] px-3 text-[#fff] focus:outline-none" bind:value={selectedId} on:change={(e) => handleSelectChange(e.currentTarget.value)}>
+			{#each sortedCharacters as { CharacterName, CharacterClassName, ItemAvgLevel }}
+				<option value={CharacterName}>
+					{CharacterName} [{CharacterClassName}] - {ItemAvgLevel}
+				</option>
+			{/each}
+		</select>
+	</div>
 {:else}
 	<div class="flex h-[40px] w-[320px] items-center justify-center">캐릭터 정보를 불러오는 중...</div>
 {/if}
 
 <div class="flex w-full items-center justify-center gap-8 p-8">
-	<button on:click={() => moveToCharacter('prev')} class="cursor-pointer">
-		<Chevron_left size="100" />
+	<button on:click={() => moveToCharacter('prev')} class="cursor-pointer text-2xl font-bold text-[#fff]">
+		<Chevron_left size="100" /> 눌러줘
 	</button>
 	<slot />
-	<button on:click={() => moveToCharacter('next')} class="cursor-pointer">
-		<Chevron_right size="100" />
+	<button on:click={() => moveToCharacter('next')} class="cursor-pointer text-2xl font-bold text-[#fff]">
+		<Chevron_right size="100" /> 나도 눌러줘
 	</button>
 </div>
+
+<style>
+	select:focus {
+		outline: none;
+	}
+</style>
