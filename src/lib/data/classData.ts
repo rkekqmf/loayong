@@ -32,7 +32,7 @@ export const classData: Record<string, ClassData> = {
 		jump: {
 			folder01: [],
 			folder02: [],
-			class: [1, 2, 3, 5]
+			class: [9, 10, 11, 12]
 		}
 	},
 	바드: {
