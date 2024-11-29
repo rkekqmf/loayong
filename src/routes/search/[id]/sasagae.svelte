@@ -12,7 +12,8 @@
 		try {
 			const response = await fetch(`${PUBLIC_API_URL}/search?keyword=${encodeURIComponent(keyword)}`);
 			if (!response.ok) throw new Error('검색 실패');
-			searchResults = await response.json();
+			const allResults = await response.json();
+			searchResults = allResults.slice(1);
 			console.log('검색 결과:', searchResults);
 		} catch (error) {
 			console.error('검색 에러:', error);
