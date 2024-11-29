@@ -5,6 +5,7 @@
 	import Revolution from '$lib/components/revolution.svelte';
 	import Ggadal from '$lib/components/ggadal.svelte';
 	import Jump from '$lib/components/jump.svelte';
+	import Sasagae from './sasagae.svelte';
 
 	let data: any = null;
 	let chartData: any[] = [];
@@ -104,7 +105,8 @@
 				</p>
 				<img width="200" src={data.CharacterImage} alt="item" class="character-image" />
 			</div>
-			<Chart data={chartData} />
+			<Sasagae />
+			<!-- <Chart data={chartData} /> -->
 		</div>
 
 		<div class="flex-[3]">
