@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Chevron_left, Chevron_right } from 'svelte-google-materialdesign-icons';
 	import { page } from '$app/stores';
-	import { searchStore } from '$lib/store/store';
+	import { searchStore } from '$lib/stores/store';
 	import { goto } from '$app/navigation';
 	let isLoading = false;
 	let data: any[] = [];
@@ -78,7 +78,7 @@
 	function handleSelectChange(newValue: string) {
 		if (newValue) {
 			$searchStore = newValue;
-			goto(`/search/${encodeURIComponent(newValue)}`);
+			goto(`/characters/${encodeURIComponent(newValue)}`);
 		}
 	}
 
@@ -96,33 +96,37 @@
 
 		const newCharacter = sortedCharacters[newIndex].CharacterName;
 		$searchStore = newCharacter;
-		goto(`/search/${encodeURIComponent(newCharacter)}`);
+		goto(`/characters/${encodeURIComponent(newCharacter)}`);
 	}
 </script>
 
-{#if !isLoading}
-	<div class="mb-10 flex items-center justify-center">
-		<select class="h-[40px] min-h-[40px] w-[320px] rounded-md border border-[#65ad7a] bg-[#3a6346] px-3 text-[#fff] focus:outline-none" bind:value={selectedId} on:change={(e) => handleSelectChange(e.currentTarget.value)}>
-			{#each sortedCharacters as { CharacterName, CharacterClassName, ItemAvgLevel }}
-				<option value={CharacterName}>
-					{CharacterName} [{CharacterClassName}] - {ItemAvgLevel}
-				</option>
-			{/each}
-		</select>
-	</div>
-{:else}
-	<div class="flex h-[40px] w-[320px] items-center justify-center">캐릭터 정보를 불러오는 중...</div>
-{/if}
+<section class="relative flex flex-[2] flex-col items-center justify-center gap-2 rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-4 shadow-box">
+	{#if !isLoading}
+		<div class="mb-10 flex items-center justify-center">
+			<select class="h-[40px] min-h-[40px] w-[320px] rounded-md border border-[#65ad7a] bg-[#3a6346] px-3 text-[#fff] focus:outline-none" bind:value={selectedId} on:change={(e) => handleSelectChange(e.currentTarget.value)}>
+				{#each sortedCharacters as { CharacterName, CharacterClassName, ItemAvgLevel }}
+					<option value={CharacterName}>
+						{CharacterName} [{CharacterClassName}] - {ItemAvgLevel}
+					</option>
+				{/each}
+			</select>
+		</div>
+	{:else}
+		<div class="flex h-[40px] w-[320px] items-center justify-center">캐릭터 정보를 불러오는 중...</div>
+	{/if}
 
-<div class="flex w-full items-center justify-center gap-8 p-8">
-	<button on:click={() => moveToCharacter('prev')} class="cursor-pointer text-2xl font-bold text-[#fff]">
-		<Chevron_left size="100" /> 눌러줘
-	</button>
-	<slot />
-	<button on:click={() => moveToCharacter('next')} class="cursor-pointer text-2xl font-bold text-[#fff]">
-		<Chevron_right size="100" /> 나도 눌러줘
-	</button>
-</div>
+	<div class="flex w-full items-center justify-center">
+		<button on:click={() => moveToCharacter('prev')} class="shrink-0 cursor-pointer text-2xl font-bold text-[#fff]">
+			<Chevron_left size="70" />
+		</button>
+		<div class="min-w-0 flex-1">
+			<slot />
+		</div>
+		<button on:click={() => moveToCharacter('next')} class="shrink-0 cursor-pointer text-2xl font-bold text-[#fff]">
+			<Chevron_right size="70" />
+		</button>
+	</div>
+</section>
 
 <style>
 	select:focus {

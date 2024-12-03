@@ -39,7 +39,7 @@
 </script>
 
 <section class="chartContainer">
-	<h2 class="mb-6 inline-block border-b-2 border-blue-500 pb-2 text-2xl text-gray-800">깨달음</h2>
+	<h2 class="mb-6 inline-block border-b-2 border-blue-500 pb-2 text-2xl text-white">깨달음</h2>
 	<div class="grid-layout">
 		{#each folder01GgadalImages as imageNum, i}
 			{@const ggadalInfo = ggadalData.find((data) => data.iconNum === imageNum)}
@@ -86,20 +86,6 @@
 </section>
 
 <style>
-	.chartContainer {
-		min-height: 765px;
-		min-width: 800px;
-		width: 100%;
-		margin: 0 auto;
-		box-shadow:
-			inset 0 -3px 10px rgba(0, 0, 0, 0.4),
-			inset 0 3px 10px rgba(255, 255, 255, 0.4),
-			0 3px 8px rgba(0, 0, 0, 0.3);
-		background: radial-gradient(circle at center, #e8fef1, #c6cfff), linear-gradient(to bottom, #e8fef1, #c6cfff);
-		position: relative;
-		overflow: hidden;
-	}
-
 	.grid-layout {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);

@@ -29,8 +29,8 @@
 </script>
 
 <section class="chartContainer">
-	<h2 class="mb-6 inline-block border-b-2 border-blue-500 pb-2 text-2xl text-gray-800">도약</h2>
-	<div class="flex flex-wrap gap-3 rounded-lg bg-gray-50 p-4">
+	<h2 class="mb-6 inline-block border-b-2 border-green-500 pb-2 text-2xl text-white">도약</h2>
+	<div class="flex flex-wrap gap-3 rounded-lg p-4">
 		{#each folder01JumpImages as num}
 			{@const jumpInfo = jumpData.find((data) => data.iconNum === num)}
 			<img
@@ -70,17 +70,4 @@
 </section>
 
 <style>
-	.chartContainer {
-		min-height: 765px;
-		min-width: 800px;
-		width: 100%;
-		margin: 0 auto;
-		box-shadow:
-			inset 0 -3px 10px rgba(0, 0, 0, 0.4),
-			inset 0 3px 10px rgba(255, 255, 255, 0.4),
-			0 3px 8px rgba(0, 0, 0, 0.3);
-		background: radial-gradient(circle at center, #e8fef1, #82a764), linear-gradient(to bottom, #e8fef1, #77b790);
-		position: relative;
-		overflow: hidden;
-	}
 </style>

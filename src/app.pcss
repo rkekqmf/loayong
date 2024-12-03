@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+	font-family: 'Gowun Dodum', 'Do Hyeon', sans-serif;
+	box-sizing: border-box;
+}
+
+body {
+	@apply flex h-screen flex-col;
+	margin: 0; /* 기본 margin 제거 */
+	background: radial-gradient(ellipse 90% 90% at center, theme(colors.app.gradient.start) 0%, theme(colors.app.gradient.middle) 50%, theme(colors.app.gradient.end) 100%);
+	overflow-x: hidden;
+}

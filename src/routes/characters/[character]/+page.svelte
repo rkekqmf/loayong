@@ -2,9 +2,9 @@
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Chart from './chart.svelte';
-	import Revolution from '$lib/components/revolution.svelte';
-	import Ggadal from '$lib/components/ggadal.svelte';
-	import Jump from '$lib/components/jump.svelte';
+	import Revolution from '../components/revolution.svelte';
+	import Ggadal from '../components/ggadal.svelte';
+	import Jump from '../components/jump.svelte';
 	import Sasagae from './sasagae.svelte';
 
 	let data: any = null;
@@ -96,20 +96,42 @@
 		</div>
 	</div>
 {:else if data}
-	<div class="flex h-full w-full">
-		<div class="flex-1">
-			<div class="chartContainer flex flex-col items-center justify-center">
+	<div class="flex h-full w-full flex-col gap-4">
+		<div class="flex flex-col md:flex-row">
+			<div class=" flex min-w-[300px] flex-col items-center justify-center">
+				<p class="text-sm text-lime-500">{data.GuildName}</p>
 				<p class="text-2xl font-bold text-white">
-					<span class="text-lime-500">{data.GuildName}</span><span class="text-pink-500">{data.Title}</span>
-					{data.CharacterName} <span class="text-red-300">{data.CharacterClassName}</span>
+					<!-- <span class="text-pink-500">{data.Title}</span> -->
+					{data.CharacterName}
+					<!-- <span class="text-red-300">{data.CharacterClassName}</span> -->
 				</p>
-				<img width="200" src={data.CharacterImage} alt="item" class="character-image" />
+				<div class="relative h-[300px] w-full overflow-hidden bg-[#15181d]">
+					<div class="absolute">
+						<div class="absolute bottom-0 left-0 top-0 w-20 bg-gradient-to-r from-[#15181d] to-transparent"></div>
+						<img alt={data.CharacterName} loading="lazy" width="612" height="708" decoding="async" data-nimg="1" src={data.CharacterImage} style="color: transparent;" />
+						<div class="absolute bottom-0 right-0 top-0 w-20 bg-gradient-to-l from-[#15181d] to-transparent"></div>
+					</div>
+					<div
+						class="absolute inset-0 bg-[#3f7a27] mix-blend-lighten transition-colors duration-[2000ms] ease-out"
+						style="mask-image: linear-gradient(
+							 100deg, 
+							 rgba(255, 255, 255, 0.65), 
+							 rgba(255, 255, 255, 0) 70%
+						 ), linear-gradient(
+							 -100deg, 
+							 rgba(255, 255, 255, 0.65), 
+							 rgba(255, 255, 255, 0) 70%
+						 );"
+					></div>
+					<div class="absolute left-5 top-5 text-white drop-shadow"></div>
+					<div class="absolute right-0 top-0"></div>
+				</div>
 			</div>
 			<Sasagae />
 			<!-- <Chart data={chartData} /> -->
 		</div>
 
-		<div class="flex-[3]">
+		<div class="flex flex-col">
 			<div class="mb-4 flex justify-center gap-4">
 				<button class="px-4 py-2 {activeTab === 'revolution' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'revolution')}> Revolution </button>
 				<button class="px-4 py-2 {activeTab === 'ggadal' ? 'bg-blue-500 text-white' : 'bg-gray-200'}" on:click={() => (activeTab = 'ggadal')}> Ggadal </button>
@@ -135,20 +157,4 @@
 {/if}
 
 <style>
-	.chartContainer {
-		width: 100%;
-		height: 400px;
-		margin: 0 auto;
-		box-shadow:
-			inset 0 -3px 10px rgba(0, 0, 0, 0.4),
-			inset 0 3px 10px rgba(255, 255, 255, 0.4),
-			0 3px 8px rgba(0, 0, 0, 0.3);
-		background: #171a20;
-		position: relative;
-		overflow: hidden;
-	}
-
-	.character-image {
-		filter: brightness(1.1);
-	}
 </style>

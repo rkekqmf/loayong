@@ -35,8 +35,8 @@
 </script>
 
 <section class="chartContainer">
-	<h2 class="mb-6 inline-block border-b-2 border-emerald-500 pb-2 text-2xl text-gray-800">진화</h2>
-	<div class="grid grid-cols-6 gap-3 rounded-lg bg-gray-50 p-4">
+	<h2 class="mb-6 inline-block border-b-2 border-yellow-500 pb-2 text-2xl text-white">진화</h2>
+	<div class="grid grid-cols-6 gap-3 rounded-lg p-4">
 		{#each commonRevolutionImages as num}
 			{@const evolutionInfo = evolutionData.find((data) => data.iconNum === num)}
 			<div class="relative">
@@ -61,17 +61,4 @@
 </section>
 
 <style>
-	.chartContainer {
-		min-height: 765px;
-		min-width: 800px;
-		width: 100%;
-		margin: 0 auto;
-		box-shadow:
-			inset 0 -3px 10px rgba(0, 0, 0, 0.4),
-			inset 0 3px 10px rgba(255, 255, 255, 0.4),
-			0 3px 8px rgba(0, 0, 0, 0.3);
-		background: radial-gradient(circle at center, #e8fef1, #ffc6c6), linear-gradient(to bottom, #e8fef1, #77b790);
-		position: relative;
-		overflow: hidden;
-	}
 </style>
