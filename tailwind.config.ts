@@ -42,5 +42,15 @@ export default {
 		}
 	},
 
-	plugins: []
+	plugins: [
+		function ({ addUtilities }) {
+			addUtilities({
+				'.text-sm-responsive': {
+					'@media (max-width: 640px)': {
+						fontSize: '0.875rem'
+					}
+				}
+			});
+		}
+	]
 } satisfies Config;

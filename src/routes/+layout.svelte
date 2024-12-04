@@ -41,12 +41,12 @@
 </script>
 
 <Navigation />
-<main class="mx-auto w-full max-w-[1536px] flex-1 px-4 sm:px-6 lg:px-8 xl:px-10">
+<main class="text-sm-responsive mx-auto w-full max-w-[1536px] flex-1 px-4 lg:px-8 xl:px-10">
 	<div class="flex flex-col items-center justify-center gap-12 py-20">
 		<Advertise width="w-full sm:w-[440px] md:w-[640px] lg:w-[940px] xl:w-[1240px]" height="h-[100px]" type="static" />
 		<div class="flex w-full gap-4">
 			<Advertise height="hidden md:flex md:h-[600px]" width="w-[200px]" />
-			<div class="flex flex-col gap-4 overflow-hidden">
+			<div class="flex w-full flex-col gap-4 overflow-hidden">
 				<SearchBar bind:searchQuery {handleSearch} />
 				{@render children()}
 			</div>
