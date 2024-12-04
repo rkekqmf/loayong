@@ -135,7 +135,7 @@
 	}
 
 	.btn {
-		@apply rounded border border-white/20 bg-white/10 px-4 py-2 transition-all hover:bg-white/20;
+		@apply rounded border border-white/20 bg-white/10 px-4 py-2 transition-all;
 	}
 
 	.input {
