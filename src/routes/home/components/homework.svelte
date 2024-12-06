@@ -228,7 +228,7 @@
 										<button on:click={handleReset} class="rounded-xl bg-red-500 p-2 text-white transition-colors hover:bg-red-300"> 리셋 </button>
 									</div>
 									<!-- 일일 컨텐츠 버튼 -->
-									<div class="mb-4">
+									<div>
 										<div class="flex gap-2">
 											<button
 												class="group relative flex-1 rounded-md px-3 py-2 transition-colors
