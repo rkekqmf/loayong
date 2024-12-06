@@ -193,7 +193,7 @@
 	}
 </script>
 
-<section class="relative flex flex-[2] flex-col items-center justify-center gap-2 gap-4 rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-3 shadow-box">
+<section class="relative flex flex-col items-center justify-center rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-3 shadow-box">
 	{#if isLoading}
 		<div class="text-white">로딩 중...</div>
 	{:else if savedValue}
@@ -284,7 +284,7 @@
 						{/each}
 					</div>
 
-					<!-- 슬라이더 컨트��� -->
+					<!-- 슬라이더 컨트롤 -->
 					{#if sortedCharacters.length > 1}
 						<div class="slider-dots">
 							<button class="slider-button prev" on:click={prevSlide}> ← </button>
@@ -348,7 +348,6 @@
 		justify-content: center;
 		align-items: center;
 		gap: 8px;
-		margin-top: 40px;
 	}
 
 	.dot {
