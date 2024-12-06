@@ -323,7 +323,7 @@
 											<img src={`/class/${getClassCode(character.CharacterClassName)}.png`} alt={character.CharacterClassName} class="relative z-10 h-full w-full object-cover p-1 [filter:brightness(0)_invert(1)]" />
 										</button>
 										{#if isAllComplete}
-											<span class="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center rounded-full bg-green-400 text-[10px] text-white">✓</span>
+											<span class="absolute -right-1 -top-1 z-20 flex h-3 w-3 items-center justify-center rounded-full bg-green-400 text-[10px] text-white">✓</span>
 										{/if}
 									</div>
 								{/each}
@@ -421,7 +421,7 @@
 	.dot.active {
 		border-color: rgba(44, 210, 58, 0.8);
 		transform: scale(1.1);
-		z-index: 1;
+		z-index: 10;
 	}
 
 	.dot.active::after {
