@@ -193,7 +193,7 @@
 	}
 </script>
 
-<section class="relative flex flex-col items-center justify-center rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-3 shadow-box">
+<section class="relative flex min-h-[370px] flex-col items-center justify-center rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-3 shadow-box">
 	{#if isLoading}
 		<div class="text-white">로딩 중...</div>
 	{:else if savedValue}
