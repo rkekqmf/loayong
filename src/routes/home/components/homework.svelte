@@ -3,7 +3,7 @@
 
 	let inputValue = '';
 	let savedValue = '';
-	let isLoading = false;
+	let isLoading = true;
 	let profileData = null;
 	let currentSlide = 0;
 	let sortedCharacters = [];
@@ -34,6 +34,8 @@
 		savedValue = localStorage.getItem('savedInputValue') || '';
 		if (savedValue) {
 			fetchData(savedValue);
+		} else {
+			isLoading = false;
 		}
 		// 저장된 레이드 상태 불러오기 및 초기화 확인
 		loadRaidStatus();
@@ -137,7 +139,9 @@
 	}
 
 	const fetchData = async (characterName) => {
+		if (!characterName) return; // 빈 문자열일 경우 실행하지 않음
 		isLoading = true;
+		profileData = null; // 로딩 시작할 때 profileData 초기화
 		try {
 			const encodedName = encodeURIComponent(characterName);
 			const url = `https://developer-lostark.game.onstove.com/characters/${encodedName}/siblings`;
@@ -154,9 +158,9 @@
 
 			profileData = await response.json();
 			sortedCharacters = profileData.sort((a, b) => parseFloat(b.ItemMaxLevel.replace(',', '')) - parseFloat(a.ItemMaxLevel.replace(',', ''))).slice(0, 6);
-			console.log('profileData:', profileData);
 		} catch (error) {
 			console.error('데이터 가져오기 실패:', error);
+			profileData = []; // 에러 발생 시 빈 배열로 설정
 		} finally {
 			isLoading = false;
 		}
@@ -194,94 +198,116 @@
 		<div class="text-white">로딩 중...</div>
 	{:else if savedValue}
 		{#if profileData}
-			<div class="slider-container">
-				<div class="slider-wrapper">
-					{#each sortedCharacters as character, i}
-						{@const availableRaids = getAvailableRaids(character.ItemMaxLevel)}
-						<div class="slider-slide" style="transform: translateX({(i - currentSlide) * 100}%)">
-							<div class="bg-app-box-bg flex flex-col gap-4 rounded-md border-2 border-app-box-border p-4 text-white">
-								<div class="flex items-center gap-2">
-									<div>
-										<h3 class="mb-2 text-xl font-bold">{character.CharacterName}</h3>
-										<p>클래스: {character.CharacterClassName}</p>
-										<p>아이템 레벨: {character.ItemMaxLevel}</p>
+			{#if profileData.length === 0}
+				<div class="flex flex-col items-center gap-4">
+					<p class="text-white">캐릭터 정보를 찾을 수 없습니다.</p>
+					<div class="flex gap-2">
+						<input
+							type="text"
+							bind:value={inputValue}
+							placeholder="캐릭터 닉네임"
+							on:keydown={(e) => e.key === 'Enter' && handleSave()}
+							class="w-full rounded-md border-2 border-app-box-border bg-app-box p-2 text-center text-white transition-colors placeholder:text-gray-400 focus:border-green-500 focus:outline-none"
+						/>
+						<button on:click={handleSave} class="bg-app-box-bg min-w-[60px] rounded-md border-2 border-app-box-border p-2 text-center text-white transition-colors hover:bg-green-700"> 등록 </button>
+					</div>
+				</div>
+			{:else}
+				<div class="slider-container">
+					<div class="slider-wrapper">
+						{#each sortedCharacters as character, i}
+							{@const availableRaids = getAvailableRaids(character.ItemMaxLevel)}
+							<div class="slider-slide" style="transform: translateX({(i - currentSlide) * 100}%)">
+								<div class="bg-app-box-bg flex flex-col gap-4 rounded-md border-2 border-app-box-border p-4 text-white">
+									<div class="flex items-center gap-2">
+										<div>
+											<h3 class="mb-2 text-xl font-bold">{character.CharacterName}</h3>
+											<p>클래스: {character.CharacterClassName}</p>
+											<p>아이템 레벨: {character.ItemMaxLevel}</p>
+										</div>
+										<button on:click={handleReset} class="rounded-xl bg-red-500 p-2 text-white transition-colors hover:bg-red-300"> 리셋 </button>
 									</div>
-									<button on:click={handleReset} class="min-w-[60px] rounded-md border-2 border-app-box-border bg-red-500 p-2 text-center text-white">초기화</button>
-								</div>
-								<!-- 일일 컨텐츠 버튼 -->
-								<div class="mb-4">
-									<div class="flex gap-2">
-										<button
-											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
-											{dailyStatus[character.CharacterName]?.guardian ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
-											on:click={() => toggleDaily(character.CharacterName, 'guardian')}
-										>
-											가디언토벌
-											{#if dailyStatus[character.CharacterName]?.guardian}
-												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
-											{/if}
-										</button>
-										<button
-											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
-											{dailyStatus[character.CharacterName]?.chaos ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
-											on:click={() => toggleDaily(character.CharacterName, 'chaos')}
-										>
-											쿠르잔전선
-											{#if dailyStatus[character.CharacterName]?.chaos}
-												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
-											{/if}
-										</button>
-										<button
-											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
-											{dailyStatus[character.CharacterName]?.epona ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
-											on:click={() => toggleDaily(character.CharacterName, 'epona')}
-										>
-											에포나
-											{#if dailyStatus[character.CharacterName]?.epona}
-												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
-											{/if}
-										</button>
+									<!-- 일일 컨텐츠 버튼 -->
+									<div class="mb-4">
+										<div class="flex gap-2">
+											<button
+												class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+												{dailyStatus[character.CharacterName]?.guardian ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
+												on:click={() => toggleDaily(character.CharacterName, 'guardian')}
+											>
+												가디언토벌
+												{#if dailyStatus[character.CharacterName]?.guardian}
+													<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+												{/if}
+											</button>
+											<button
+												class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+												{dailyStatus[character.CharacterName]?.chaos ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
+												on:click={() => toggleDaily(character.CharacterName, 'chaos')}
+											>
+												쿠르잔전선
+												{#if dailyStatus[character.CharacterName]?.chaos}
+													<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+												{/if}
+											</button>
+											<button
+												class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+												{dailyStatus[character.CharacterName]?.epona ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
+												on:click={() => toggleDaily(character.CharacterName, 'epona')}
+											>
+												에포나
+												{#if dailyStatus[character.CharacterName]?.epona}
+													<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+												{/if}
+											</button>
+										</div>
 									</div>
-								</div>
 
-								<!-- 레이드 목록 (가로 배치) -->
-								<div class="flex gap-2">
-									{#each availableRaids as raid}
-										<button
-											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+									<!-- 레이드 목록 (가로 배치) -->
+									<div class="flex gap-2">
+										{#each availableRaids as raid}
+											<button
+												class="group relative flex-1 rounded-md px-3 py-2 transition-colors
 											{raidStatus[character.CharacterName]?.[raid.id] ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
-											on:click={() => toggleRaid(character.CharacterName, raid.id)}
-										>
-											<div class="text-sm">{raid.name}</div>
-											{#if raidStatus[character.CharacterName]?.[raid.id]}
-												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
-											{/if}
-											<div class="shadow-glow absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-white/20 opacity-0 transition-opacity group-hover:opacity-100"></div>
-										</button>
-									{/each}
+												on:click={() => toggleRaid(character.CharacterName, raid.id)}
+											>
+												<div class="text-sm">{raid.name}</div>
+												{#if raidStatus[character.CharacterName]?.[raid.id]}
+													<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+												{/if}
+												<div class="shadow-glow absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-white/20 opacity-0 transition-opacity group-hover:opacity-100"></div>
+											</button>
+										{/each}
+									</div>
 								</div>
 							</div>
-						</div>
-					{/each}
-				</div>
-
-				<!-- 슬라이더 컨트롤 -->
-				{#if sortedCharacters.length > 1}
-					<div class="slider-dots">
-						<button class="slider-button prev" on:click={prevSlide}> ← </button>
-
-						{#each sortedCharacters as _, i}
-							<button class="dot {i === currentSlide ? 'active' : ''}" on:click={() => (currentSlide = i)} />
 						{/each}
-						<button class="slider-button next" on:click={nextSlide}> → </button>
 					</div>
-				{/if}
-			</div>
+
+					<!-- 슬라이더 컨트��� -->
+					{#if sortedCharacters.length > 1}
+						<div class="slider-dots">
+							<button class="slider-button prev" on:click={prevSlide}> ← </button>
+
+							{#each sortedCharacters as _, i}
+								<button class="dot {i === currentSlide ? 'active' : ''}" on:click={() => (currentSlide = i)} />
+							{/each}
+							<button class="slider-button next" on:click={nextSlide}> → </button>
+						</div>
+					{/if}
+				</div>
+			{/if}
 		{/if}
 	{:else}
 		<div class="flex gap-2">
-			<input type="text" bind:value={inputValue} class="bg-app-box-bg w-full rounded-md border-2 border-app-box-border p-2 text-center text-black" />
-			<button on:click={handleSave} class="bg-app-box-bg min-w-[60px] rounded-md border-2 border-app-box-border p-2 text-center text-white">등록</button>
+			<input
+				type="text"
+				bind:value={inputValue}
+				placeholder="캐릭터 닉네임"
+				on:keydown={(e) => e.key === 'Enter' && handleSave()}
+				class="w-full rounded-md border-2 border-app-box-border bg-app-box p-2 text-center text-white transition-colors placeholder:text-gray-400 focus:border-green-500 focus:outline-none"
+			/>
+			<button on:click={handleSave} class="bg-app-box-bg min-w-[60px] rounded-md border-2 border-app-box-border p-2 text-center text-white transition-colors hover:bg-green-700"> 등록 </button>
 		</div>
 	{/if}
 </section>
