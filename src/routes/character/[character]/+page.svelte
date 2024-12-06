@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
-	import Chart from './chart.svelte';
+	import Chart from '../components/chart.svelte';
 	import Revolution from '../components/revolution.svelte';
 	import Ggadal from '../components/ggadal.svelte';
 	import Jump from '../components/jump.svelte';
-	import Sasagae from './sasagae.svelte';
+	import Sasagae from '../components/sasagae.svelte';
 
 	let data: any = null;
 	let chartData: any[] = [];

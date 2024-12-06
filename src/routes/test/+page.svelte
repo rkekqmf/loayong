@@ -141,9 +141,9 @@
 
 		// 원하는 조합만 주석 해제해서 사용
 		allImages = [
-			...specialUrls,
-			...urls2
-			// ...urls3
+			// ...specialUrls,
+			// ...urls2
+			...urls3
 		];
 	});
 

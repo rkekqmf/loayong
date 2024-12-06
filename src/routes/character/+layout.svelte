@@ -78,7 +78,7 @@
 	function handleSelectChange(newValue: string) {
 		if (newValue) {
 			$searchStore = newValue;
-			goto(`/characters/${encodeURIComponent(newValue)}`);
+			goto(`/character/${encodeURIComponent(newValue)}`);
 		}
 	}
 
@@ -96,7 +96,7 @@
 
 		const newCharacter = sortedCharacters[newIndex].CharacterName;
 		$searchStore = newCharacter;
-		goto(`/characters/${encodeURIComponent(newCharacter)}`);
+		goto(`/character/${encodeURIComponent(newCharacter)}`);
 	}
 </script>
 

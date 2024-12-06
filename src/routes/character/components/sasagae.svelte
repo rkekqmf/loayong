@@ -7,7 +7,7 @@
 
 	onMount(async () => {
 		const currentPath = $page.url.pathname;
-		const keyword = currentPath.startsWith('/characters/') ? decodeURIComponent(currentPath.split('/')[2]) : '';
+		const keyword = currentPath.startsWith('/character/') ? decodeURIComponent(currentPath.split('/')[2]) : '';
 
 		try {
 			console.log('keyword:', keyword);
