@@ -1,41 +1,344 @@
 <script>
-	const tableTitles = ['TA', 'TB', 'TC'];
-	const values = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.0, 0.4, 0.4, 0.4, 0.4, 0.4];
+	import { onMount } from 'svelte';
+
+	let inputValue = '';
+	let savedValue = '';
+	let isLoading = false;
+	let profileData = null;
+	let currentSlide = 0;
+	let sortedCharacters = [];
+
+	// 레이드 목록 정의 (레벨별)
+	const raidTiers = {
+		tier1: [
+			{ id: 'kayangel', name: '카양겔', minLevel: 1540 },
+			{ id: 'abrev', name: '아브렐슈드', minLevel: 1540 },
+			{ id: 'atop', name: '상아탑', minLevel: 1600 },
+			{ id: 'kmen', name: '카멘', minLevel: 1610 }
+		],
+		tier2: [
+			{ id: 'ekidna', name: '서막', minLevel: 1620 },
+			{ id: 'vehemoth', name: '베히모스', minLevel: 1640 },
+			{ id: '1mac', name: '1막', minLevel: 1660 },
+			{ id: '2mac', name: '2막', minLevel: 1670 }
+		]
+	};
+
+	// 캐릭터별 레이드 완료 상태를 저장할 객체
+	let raidStatus = {};
+
+	// 일일 컨텐츠 상태 추가
+	let dailyStatus = {};
+
+	onMount(() => {
+		savedValue = localStorage.getItem('savedInputValue') || '';
+		if (savedValue) {
+			fetchData(savedValue);
+		}
+		// 저장된 레이드 상태 불러오기 및 초기화 확인
+		loadRaidStatus();
+		checkWeeklyReset();
+		loadDailyStatus();
+		checkDailyReset();
+	});
+
+	// 레이드 상태 불러오기
+	function loadRaidStatus() {
+		const saved = localStorage.getItem('raidStatus');
+		if (saved) {
+			raidStatus = JSON.parse(saved);
+		}
+	}
+
+	// 일일 컨텐츠 상태 불러오기
+	function loadDailyStatus() {
+		const saved = localStorage.getItem('dailyStatus');
+		if (saved) {
+			dailyStatus = JSON.parse(saved);
+		}
+	}
+
+	// 주간 초기화 체크
+	function checkWeeklyReset() {
+		const lastReset = localStorage.getItem('lastResetCheck');
+		const now = new Date();
+		const krTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9
+		const krDay = krTime.getUTCDay();
+		const krHour = krTime.getUTCHours();
+
+		// 수요일 06:00 AM (KST) 체크
+		if (krDay === 3 && krHour >= 6 && lastReset !== krTime.toDateString()) {
+			raidStatus = {};
+			localStorage.setItem('raidStatus', JSON.stringify(raidStatus));
+			localStorage.setItem('lastResetCheck', krTime.toDateString());
+		}
+	}
+
+	// 일일 초기화 체크 (매일 06:00 AM KST)
+	function checkDailyReset() {
+		const lastDailyReset = localStorage.getItem('lastDailyReset');
+		const now = new Date();
+		const krTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+		const krHour = krTime.getUTCHours();
+
+		if (krHour >= 6 && lastDailyReset !== krTime.toDateString()) {
+			dailyStatus = {};
+			localStorage.setItem('dailyStatus', JSON.stringify(dailyStatus));
+			localStorage.setItem('lastDailyReset', krTime.toDateString());
+		}
+	}
+
+	// 레이드 상태 토글
+	function toggleRaid(characterName, raidId) {
+		if (!raidStatus[characterName]) {
+			raidStatus[characterName] = {};
+		}
+		raidStatus[characterName][raidId] = !raidStatus[characterName][raidId];
+		localStorage.setItem('raidStatus', JSON.stringify(raidStatus));
+	}
+
+	// 캐릭터의 모든 레이드 상태 토글
+	function toggleAllRaids(characterName, value) {
+		if (!raidStatus[characterName]) {
+			raidStatus[characterName] = {};
+		}
+		raids.forEach((raid) => {
+			raidStatus[characterName][raid.id] = value;
+		});
+		localStorage.setItem('raidStatus', JSON.stringify(raidStatus));
+	}
+
+	// 일일 컨텐츠 토글
+	function toggleDaily(characterName, contentType) {
+		if (!dailyStatus[characterName]) {
+			dailyStatus[characterName] = {};
+		}
+		dailyStatus[characterName][contentType] = !dailyStatus[characterName][contentType];
+		localStorage.setItem('dailyStatus', JSON.stringify(dailyStatus));
+	}
+
+	function handleSave() {
+		savedValue = inputValue;
+		localStorage.setItem('savedInputValue', inputValue);
+		inputValue = '';
+		fetchData(savedValue);
+	}
+
+	function handleReset() {
+		savedValue = '';
+		localStorage.removeItem('savedInputValue');
+		localStorage.removeItem('raidStatus');
+		localStorage.removeItem('dailyStatus');
+		localStorage.removeItem('lastResetCheck');
+		localStorage.removeItem('lastDailyReset');
+		raidStatus = {};
+		dailyStatus = {};
+		profileData = null;
+	}
+
+	const fetchData = async (characterName) => {
+		isLoading = true;
+		try {
+			const encodedName = encodeURIComponent(characterName);
+			const url = `https://developer-lostark.game.onstove.com/characters/${encodedName}/siblings`;
+			const response = await fetch(url, {
+				headers: {
+					accept: 'application/json',
+					authorization: `bearer ${import.meta.env.VITE_LOSTARK_API_KEY}`
+				}
+			});
+
+			if (!response.ok) {
+				throw new Error('API 호출 실패');
+			}
+
+			profileData = await response.json();
+			sortedCharacters = profileData.sort((a, b) => parseFloat(b.ItemMaxLevel.replace(',', '')) - parseFloat(a.ItemMaxLevel.replace(',', ''))).slice(0, 6);
+			console.log('profileData:', profileData);
+		} catch (error) {
+			console.error('데이터 가져오기 실패:', error);
+		} finally {
+			isLoading = false;
+		}
+	};
+
+	const nextSlide = () => {
+		currentSlide = (currentSlide + 1) % sortedCharacters.length;
+	};
+
+	const prevSlide = () => {
+		currentSlide = (currentSlide - 1 + sortedCharacters.length) % sortedCharacters.length;
+	};
+
+	// 캐릭터 레벨에 따른 레이드 목록 반환
+	function getAvailableRaids(itemLevel) {
+		const level = parseFloat(itemLevel.replace(',', ''));
+		let availableRaids = [];
+
+		// 모든 티어의 레이드를 순회하며 레벨 체크
+		Object.values(raidTiers).forEach((tierRaids) => {
+			tierRaids.forEach((raid) => {
+				if (level >= raid.minLevel) {
+					availableRaids.push(raid);
+				}
+			});
+		});
+
+		// 최대 3개까지만 반환 (가장 높은 레벨의 레이드 우선)
+		return availableRaids.slice(-3);
+	}
 </script>
 
-<section class="relative flex flex-[2] flex-col items-center justify-center gap-9 rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-8 shadow-box">
-	<h2 class=" text-center font-bold text-white">Title</h2>
-	<p class=" text-center text-white/70">(description)</p>
+<section class="relative flex flex-[2] flex-col items-center justify-center gap-2 gap-4 rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-3 shadow-box">
+	{#if isLoading}
+		<div class="text-white">로딩 중...</div>
+	{:else if savedValue}
+		{#if profileData}
+			<div class="slider-container">
+				<div class="slider-wrapper">
+					{#each sortedCharacters as character, i}
+						{@const availableRaids = getAvailableRaids(character.ItemMaxLevel)}
+						<div class="slider-slide" style="transform: translateX({(i - currentSlide) * 100}%)">
+							<div class="bg-app-box-bg flex flex-col gap-4 rounded-md border-2 border-app-box-border p-4 text-white">
+								<div class="flex items-center gap-2">
+									<div>
+										<h3 class="mb-2 text-xl font-bold">{character.CharacterName}</h3>
+										<p>클래스: {character.CharacterClassName}</p>
+										<p>아이템 레벨: {character.ItemMaxLevel}</p>
+									</div>
+									<button on:click={handleReset} class="min-w-[60px] rounded-md border-2 border-app-box-border bg-red-500 p-2 text-center text-white">초기화</button>
+								</div>
+								<!-- 일일 컨텐츠 버튼 -->
+								<div class="mb-4">
+									<div class="flex gap-2">
+										<button
+											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+											{dailyStatus[character.CharacterName]?.guardian ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
+											on:click={() => toggleDaily(character.CharacterName, 'guardian')}
+										>
+											가디언토벌
+											{#if dailyStatus[character.CharacterName]?.guardian}
+												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+											{/if}
+										</button>
+										<button
+											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+											{dailyStatus[character.CharacterName]?.chaos ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
+											on:click={() => toggleDaily(character.CharacterName, 'chaos')}
+										>
+											쿠르잔전선
+											{#if dailyStatus[character.CharacterName]?.chaos}
+												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+											{/if}
+										</button>
+										<button
+											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+											{dailyStatus[character.CharacterName]?.epona ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
+											on:click={() => toggleDaily(character.CharacterName, 'epona')}
+										>
+											에포나
+											{#if dailyStatus[character.CharacterName]?.epona}
+												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+											{/if}
+										</button>
+									</div>
+								</div>
 
-	<div class="flex gap-6">
-		<!-- Farming Column -->
-		<div class="flex flex-col">
-			<div class="mb-3 border-b border-white/20 pb-3 text-center text-white">subTitle</div>
-			<div class="grid grid-cols-3 gap-2">
-				<div class="col-span-3 grid grid-cols-3">
-					{#each tableTitles as title}
-						<div class="text-center text-white">{title}</div>
+								<!-- 레이드 목록 (가로 배치) -->
+								<div class="flex gap-2">
+									{#each availableRaids as raid}
+										<button
+											class="group relative flex-1 rounded-md px-3 py-2 transition-colors
+											{raidStatus[character.CharacterName]?.[raid.id] ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}"
+											on:click={() => toggleRaid(character.CharacterName, raid.id)}
+										>
+											<div class="text-sm">{raid.name}</div>
+											{#if raidStatus[character.CharacterName]?.[raid.id]}
+												<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-400 text-xs">✓</span>
+											{/if}
+											<div class="shadow-glow absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-white/20 opacity-0 transition-opacity group-hover:opacity-100"></div>
+										</button>
+									{/each}
+								</div>
+							</div>
+						</div>
 					{/each}
 				</div>
-				{#each values as value}
-					<div class="text-center text-white">{value}</div>
-				{/each}
-			</div>
-		</div>
 
-		<!-- Farming Column -->
-		<div class="flex flex-col">
-			<div class="mb-3 border-b border-white/20 pb-3 text-center text-white">XD</div>
-			<div class="grid grid-cols-3 gap-2">
-				<div class="col-span-3 grid grid-cols-3">
-					<div class="text-center text-white">T1</div>
-					<div class="text-center text-white">T2</div>
-					<div class="text-center text-white">T3</div>
-				</div>
-				{#each values as value}
-					<div class="text-center text-white">{value}</div>
-				{/each}
+				<!-- 슬라이더 컨트롤 -->
+				{#if sortedCharacters.length > 1}
+					<div class="slider-dots">
+						<button class="slider-button prev" on:click={prevSlide}> ← </button>
+
+						{#each sortedCharacters as _, i}
+							<button class="dot {i === currentSlide ? 'active' : ''}" on:click={() => (currentSlide = i)} />
+						{/each}
+						<button class="slider-button next" on:click={nextSlide}> → </button>
+					</div>
+				{/if}
 			</div>
+		{/if}
+	{:else}
+		<div class="flex gap-2">
+			<input type="text" bind:value={inputValue} class="bg-app-box-bg w-full rounded-md border-2 border-app-box-border p-2 text-center text-black" />
+			<button on:click={handleSave} class="bg-app-box-bg min-w-[60px] rounded-md border-2 border-app-box-border p-2 text-center text-white">등록</button>
 		</div>
-	</div>
+	{/if}
 </section>
+
+<style>
+	.slider-container {
+		position: relative;
+		width: 100%;
+		max-width: 600px;
+		margin: 0 auto;
+		overflow: hidden;
+	}
+
+	.slider-wrapper {
+		position: relative;
+		height: 300px;
+	}
+
+	.slider-slide {
+		position: absolute;
+		width: 100%;
+		transition: transform 0.5s ease;
+	}
+
+	.slider-button {
+		background: rgba(255, 255, 255, 0.3);
+		border: none;
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		cursor: pointer;
+		z-index: 10;
+		color: white;
+	}
+
+	.slider-dots {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		margin-top: 40px;
+	}
+
+	.dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.3);
+		border: none;
+		cursor: pointer;
+	}
+
+	.dot.active {
+		background: white;
+	}
+
+	.shadow-glow {
+		box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.2);
+	}
+</style>
