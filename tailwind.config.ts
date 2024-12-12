@@ -7,23 +7,23 @@ export default {
 		extend: {
 			colors: {
 				app: {
-					nav: '#1e3b28',
-					'nav-border': '#b1e0b8',
-					box: '#1b3925',
-					'box-border': '#589967',
+					nav: 'var(--color-nav)',
+					'nav-border': 'var(--color-nav-border)',
+					box: 'var(--color-box)',
+					'box-border': 'var(--color-box-border)',
 					input: {
-						DEFAULT: '#3a6346',
-						hover: '#4b805b',
-						border: '#5ca470'
+						DEFAULT: 'var(--color-input)',
+						hover: 'var(--color-input-hover)',
+						border: 'var(--color-input-border)'
 					},
 					text: {
-						DEFAULT: '#ccc',
-						muted: '#707a89'
+						DEFAULT: 'var(--color-text)',
+						muted: 'var(--color-text-muted)'
 					},
 					gradient: {
-						start: '#69bb67',
-						middle: '#2a5430',
-						end: '#1b3925'
+						start: 'var(--color-gradient-start)',
+						middle: 'var(--color-gradient-middle)',
+						end: 'var(--color-gradient-end)'
 					}
 				}
 			},
