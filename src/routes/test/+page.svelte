@@ -1,205 +1,85 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import TestComponent from './testComponent.svelte';
 
-	let allImages: string[] = [];
-	let loadedImages: string[] = [];
+	// count
+	let count = $state(10);
+	const doubleCount = $derived(count * 3);
 
-	onMount(() => {
-		const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-
-		// 2자리 조합 (예: aa, ab, ac...)
-		const combinations2 = letters.flatMap((l1) => letters.map((l2) => l1 + l2));
-		const urls2 = combinations2.flatMap((combo) => Array.from({ length: 5 }, (_, i) => i + 1).map((num) => `https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_${combo}/ark_passive_${combo}_${num}.png`));
-
-		// 3자리 조합으로 URL 생성
-		const combinations3 = letters.flatMap((l1) => letters.flatMap((l2) => letters.map((l3) => l1 + l2 + l3)));
-
-		const urls3 = combinations3.flatMap((combo) => Array.from({ length: 5 }, (_, i) => i + 1).map((num) => `https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_${combo}/ark_passive_${combo}_${num}.png`));
-
-		// 특수 조합 추가
-		const specialCombinations = [
-			// 테스트용 접두어/접미어
-			'pre',
-			'post',
-			'neo',
-			'meta',
-			'ultra',
-			'hyper',
-			'super',
-			'mega',
-			'proto',
-			'arch',
-			'grand',
-			'high',
-			'over',
-			'under',
-			'inner',
-			'outer',
-			'omni',
-			'multi',
-			'uni',
-			'poly',
-			'trans',
-			'cyber',
-			'quantum',
-			'bio',
-			'techno',
-			'prime',
-			'test',
-			'temp',
-			'demo',
-			'sample',
-			'basic',
-			'simple',
-			'easy',
-			'quick',
-			'new',
-			'old',
-			'main',
-			'sub',
-			'mini',
-			'max',
-			'min',
-			'beta',
-			'alpha',
-			'dev',
-			'debug',
-			'exp',
-			'tmp',
-			'dummy',
-			'mock',
-			'fake',
-			'real',
-			'custom',
-			'user',
-			'sys',
-			'app',
-			'web',
-			'net',
-			'data',
-			'info',
-			'log',
-			'cache',
-			'temp',
-			'auto',
-			'manual',
-			'default',
-			'extra',
-			'plus',
-			'pro',
-			'lite',
-			'full',
-			'half',
-			'mid',
-			'top',
-			'bot',
-			'left',
-			'right',
-			'center',
-			'front',
-			'back',
-			'up',
-			'down',
-			'in',
-			'out',
-			'on',
-			'off',
-
-			// 상태
-			'open',
-			'close',
-			'lock',
-			'hide',
-			'show',
-			'active',
-			'idle',
-			'busy',
-			'ready',
-			'start',
-			'stop',
-			'pause',
-			'play',
-			'wait',
-			'load',
-			'save',
-			'sync',
-			'async',
-			'enable',
-			'disable',
-			'pending',
-			'success',
-			'fail',
-			'error',
-			'cancel',
-			'reset',
-			'update',
-			'refresh',
-			'connect',
-			'disconnect'
-		];
-		const specialUrls = specialCombinations.flatMap((combo) => Array.from({ length: 5 }, (_, i) => i + 1).map((num) => `https://cdn-lostark.game.onstove.com/efui_iconatlas/ark_passive_${combo}/ark_passive_${combo}_${num}.png`));
-
-		// 원하는 조합만 주석 해제해서 사용
-		allImages = [
-			// ...specialUrls,
-			// ...urls2
-			...urls3
-		];
+	// input
+	let inputElement: HTMLInputElement;
+	let clientWidth = $state(50);
+	$effect(() => {
+		inputElement.focus();
+		console.log(inputElement);
+		console.log(clientWidth);
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
-		const container = img.parentElement;
-		if (container) {
-			container.style.display = 'none';
-		}
+	// traffic light
+	const TRAFFIC_LIGHTS = ['red', 'orange', 'green'];
+	let lightIndex = $state(0);
+
+	const light = $derived(TRAFFIC_LIGHTS[lightIndex]);
+
+	function nextLight() {
+		lightIndex = (lightIndex + 1) % TRAFFIC_LIGHTS.length;
 	}
 
-	function handleImageLoad(event: Event) {
-		const img = event.target as HTMLImageElement;
-		const combo = img.src.split('ark_passive_')[1].split('/')[0];
-		if (!loadedImages.includes(combo)) {
-			loadedImages = [...loadedImages, combo];
-			console.log('발견된 조합:', combo);
-		}
+	// time
+	let time = $state(new Date().toLocaleTimeString());
+
+	$effect(() => {
+		const timer = setInterval(() => {
+			time = new Date().toLocaleTimeString();
+		}, 1000);
+
+		return () => clearInterval(timer);
+	});
+
+	// onYes and onNo
+	let isHappy = $state(true);
+
+	function onAnswerNo() {
+		isHappy = false;
 	}
+
+	function onAnswerYes() {
+		isHappy = true;
+	}
+
+	import { setContext } from 'svelte';
+	import createUserState from './createUserState.svelte.js';
+
+	const user = createUserState({
+		id: 1,
+		username: 'unicorn42',
+		email: 'unicorn42@example.com'
+	});
+
+	setContext('user', user);
 </script>
 
-<div>
-	<h3>발견된 조합들:</h3>
-	<div style="margin-bottom: 20px;">
-		{#each loadedImages as combo}
-			<span style="margin-right: 10px;">{combo}</span>
-		{/each}
-	</div>
-</div>
+<div>{doubleCount}</div>
 
-<div class="image-grid">
-	{#each allImages as imageUrl}
-		<div class="image-container">
-			<img src={imageUrl} alt="ark passive" title={imageUrl} on:error={handleImageError} on:load={handleImageLoad} />
-		</div>
-	{/each}
-</div>
+<input class="px-4" bind:this={inputElement} bind:clientWidth bind:value={clientWidth} />
 
-<style>
-	.image-grid {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 1rem;
-		padding: 1rem;
-	}
+<button onclick={nextLight}>Next light</button>
+<p>Light is: {light}</p>
+<p>
+	You must
+	{#if light === 'red'}
+		<span>STOP</span>
+	{:else if light === 'orange'}
+		<span>SLOW DOWN</span>
+	{:else if light === 'green'}
+		<span>GO</span>
+	{/if}
+</p>
 
-	.image-container {
-		aspect-ratio: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		min-width: 0;
-	}
+<p>Current time: {time}</p>
 
-	img {
-		max-width: 100%;
-		height: auto;
-	}
-</style>
+<p>Are you happy?</p>
+<TestComponent name="John" age={20} favouriteColors={['green', 'blue', 'red']} isAvailable onYes={onAnswerYes} onNo={onAnswerNo} />
+<p style="font-size: 50px;">{isHappy ? '😀' : '😥'}</p>
+
+<h1>Welcome back, {user.username}</h1>
+<TestComponent onYes={onAnswerYes} onNo={onAnswerNo} />
