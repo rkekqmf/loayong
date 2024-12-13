@@ -6,6 +6,7 @@
 	import { Star } from 'svelte-google-materialdesign-icons';
 	import { flip } from 'svelte/animate';
 	import { quintOut } from 'svelte/easing';
+	import { raidTiers } from '$lib/data/raidData';
 
 	let inputValue = '';
 	let savedValue = '';
@@ -19,28 +20,8 @@
 	let selectedCharacters = new Set();
 	let draggedCharacter = null;
 	let dragOverCharacter = null;
-
-	// 레이드 목록 정의 (레벨별)
-	const raidTiers = {
-		abyssDungeon: [
-			{ id: 'kayangel', name: '카양겔', minLevel: 1540 },
-			{ id: 'atop', name: '상아탑', minLevel: 1600 }
-		],
-		epicRaid: [{ id: 'vehemoth', name: '베히모스', minLevel: 1640 }],
-		legionRaid: [
-			{ id: 'valtan', name: '발탄', minLevel: 1415 },
-			{ id: 'vykas', name: '비아키스', minLevel: 1445 },
-			{ id: 'kukusaton', name: '쿠크세이튼', minLevel: 1475 },
-			{ id: 'abrelshud', name: '아브렐슈드', minLevel: 1490 },
-			{ id: 'illiakan', name: '일리아칸', minLevel: 1540 },
-			{ id: 'kamen', name: '카멘', minLevel: 1610 }
-		],
-		khaosRaid: [
-			{ id: 'ekidna', name: '에키드나', minLevel: 1620 },
-			{ id: 'aegir', name: '에기르', minLevel: 1660 },
-			{ id: 'khaos_abrel', name: '아브렐슈드', minLevel: 1670 }
-		]
-	};
+	let raidGoldStatus = {}; // 레이드별 추가/차감 골드 저장
+	let totalGold = 0; // 전체 골드 합계
 
 	// 캐릭터별 레이드 완료 상태를 저장할 객체
 	let raidStatus = {};
@@ -495,6 +476,35 @@
 		// 변경된 순서 저장
 		localStorage.setItem('characterOrder', JSON.stringify(profileData.map((char) => char.CharacterName)));
 	}
+
+	function calculateCharacterGold(character) {
+		let total = 0;
+		const raids = getDisplayRaids(character);
+		console.log(raids);
+		raids.forEach((raid) => {
+			if (raidStatus[character.CharacterName]?.[raid.id]) {
+				// 기본 골드
+				total += raid.goldReward;
+
+				console.log(raidGoldStatus[character.CharacterName]?.[raid.id]);
+				// 추가 골드
+				const extraGold = raidGoldStatus[character.CharacterName]?.[raid.id]?.extraGold || 0;
+				total += extraGold;
+
+				// 차감 골드
+				const minusGold = raidGoldStatus[character.CharacterName]?.[raid.id]?.minusGold || 0;
+				total -= minusGold;
+			}
+		});
+
+		return total;
+	}
+
+	function calculateTotalGold() {
+		return sortedCharacters.reduce((sum, character) => {
+			return sum + calculateCharacterGold(character);
+		}, 0);
+	}
 </script>
 
 <section class="relative flex min-h-[370px] flex-col items-center rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-3 shadow-box">
@@ -617,6 +627,11 @@
 											</button>
 										{/each}
 									</div>
+
+									<!-- 골드 표시 -->
+									<div class="mt-2 text-right text-sm text-yellow-400">
+										{calculateCharacterGold(character).toLocaleString()}G
+									</div>
 								</div>
 							</div>
 						{/each}
@@ -670,6 +685,11 @@
 							</div>
 						</div>
 					</div>
+				</div>
+
+				<!-- 전체 골드 표시 -->
+				<div class="mt-4 text-center text-lg text-yellow-400">
+					총 골드: {calculateTotalGold().toLocaleString()}G
 				</div>
 			{/if}
 		{/if}
@@ -732,6 +752,26 @@
 										<Star size="16" variation={pinnedRaids[selectedCharacter.CharacterName]?.[raid.id] ? 'filled' : 'outlined'} />
 									</button>
 								{/if}
+
+								<!-- 레이드 모달 내부 -->
+								<div class="flex items-center gap-2">
+									{#if true}
+										{@const charStatus = raidGoldStatus[selectedCharacter.CharacterName] ??= {}}
+										{@const raidStatus = charStatus[raid.id] ??= { extraGold: 0, minusGold: 0 }}
+									{/if}
+									<input
+										type="number"
+										placeholder="버스/전리품 골드"
+										on:input={(e) => {
+											raidGoldStatus[selectedCharacter.CharacterName] ??= {};
+											raidGoldStatus[selectedCharacter.CharacterName][raid.id] ??= { extraGold: 0, minusGold: 0 };
+											raidGoldStatus[selectedCharacter.CharacterName][raid.id].extraGold = +e.target.value;
+										}}
+										value={raidGoldStatus[selectedCharacter.CharacterName]?.[raid.id]?.extraGold || 0}
+										class="w-24 rounded bg-gray-700 px-2 py-1 text-white"
+									/>
+									<input type="number" placeholder="더보기 골드" bind:value={raidStatus.minusGold} class="w-24 rounded bg-gray-700 px-2 py-1 text-white" />
+								</div>
 							</div>
 						{/each}
 					</div>
