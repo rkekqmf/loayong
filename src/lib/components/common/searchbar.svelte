@@ -7,22 +7,16 @@
   </svg>`;
 </script>
 
-<div class="w-full">
-	<div class="relative">
-		<input
-			type="text"
-			class="h-[55px] w-full rounded-xl border-2 border-app-input-border
-             bg-app-input py-3 pl-12 pr-4 text-base text-app-text placeholder-app-text-muted
-             transition-all duration-200 ease-in-out
-             hover:bg-app-input-hover hover:placeholder-app-text focus:outline-none md:pl-14
-             md:text-2xl"
-			placeholder="닉네임"
-			bind:value={searchQuery}
-			on:keydown={(e) => e.key === 'Enter' && handleSearch()}
-		/>
-		<button class="absolute inset-y-0 right-5 flex items-center text-base text-app-text md:text-2xl" on:click={handleSearch}>검색</button>
-		<div class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-app-text">
-			{@html searchIcon}
-		</div>
+<div class="relative w-full">
+	<input
+		type="text"
+		class="peer h-[55px] w-full rounded-xl bg-bg-300 py-3 pl-12 pr-4 text-base placeholder-text-200 transition-colors duration-200 ease-in-out focus:bg-bg-200 focus:outline-none md:pl-14 md:text-2xl"
+		placeholder="닉네임"
+		bind:value={searchQuery}
+		on:keydown={(e) => e.key === 'Enter' && handleSearch()}
+	/>
+	<button class="absolute inset-y-0 right-5 flex items-center text-base text-text-200 transition-colors duration-200 ease-in-out hover:text-text-100 md:text-2xl" on:click={handleSearch}>검색</button>
+	<div class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-text-200 transition-colors duration-200 ease-in-out peer-focus:text-text-100">
+		{@html searchIcon}
 	</div>
 </div>

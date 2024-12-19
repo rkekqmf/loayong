@@ -46,11 +46,11 @@
 	$: allParticipantDriverDistribution = (nonParticipantPrice * nonParticipantCount + soloParticipantPrice) / driverCount;
 </script>
 
-<div class="w-full p-3 text-white">
-	<div class="card">
-		<h3 class="mb-3 text-lg text-lime-400">파티 설정</h3>
+<div class="w-full p-3">
+	<div class="mb-2 rounded-lg bg-bg-300 p-2">
+		<h3 class="mb-3 px-2 pt-1 text-lg">파티 설정</h3>
 		<div class="mb-3 flex gap-2">
-			<button class="btn" on:click={() => setPartySize(4)} class:active={partySize === 4}>4인 파티</button>
+			<button class="btn hover:bg-bg-200" on:click={() => setPartySize(4)} class:active={partySize === 4}>4인 파티</button>
 			<button class="btn" on:click={() => setPartySize(8)} class:active={partySize === 8}>8인 파티</button>
 			<button class="btn" on:click={() => setPartySize(16)} class:active={partySize === 16}>16인 파티</button>
 		</div>
@@ -66,8 +66,8 @@
 		</div>
 	</div>
 
-	<div class="card">
-		<h3 class="mb-3 text-lg text-lime-400">가격 설정</h3>
+	<div class="mb-2 rounded-lg bg-bg-300 p-2">
+		<h3 class="mb-3 px-2 pt-1 text-lg">가격 설정</h3>
 		<div class="flex flex-wrap gap-4">
 			<label class="min-w-[120px] flex-1">
 				미참가격
@@ -80,8 +80,8 @@
 		</div>
 	</div>
 
-	<div class="card">
-		<h3 class="mb-3 text-lg text-lime-400">계산 결과</h3>
+	<div class="mb-2 rounded-lg bg-bg-300 p-2">
+		<h3 class="mb-3 px-2 pt-1 text-lg">계산 결과</h3>
 		<div class="flex flex-col gap-4">
 			<div class="result-section">
 				<h4 class="mb-2 text-lime-400">독식 입찰</h4>
@@ -118,7 +118,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.btn:hover {
 		background-color: #909090; /* 밝은 색상 추가 */
 	}
@@ -129,9 +129,6 @@
 
 	.input:disabled {
 		background-color: #1a1a1a; /* 어두운 배경색 */
-	}
-	.card {
-		@apply mb-3 rounded-lg bg-black/20 p-4;
 	}
 
 	.btn {

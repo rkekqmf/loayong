@@ -9,8 +9,7 @@
 	const themes = [
 		{ id: '', icon: '🌿', label: '기본' },
 		{ id: 'theme-dark', icon: '🌙', label: '다크' },
-		{ id: 'theme-light', icon: '☀️', label: '라이트' },
-		{ id: 'theme-burgundy', icon: '🍷', label: '버건디' }
+		{ id: 'theme-light', icon: '☀️', label: '라이트' }
 	];
 
 	// 테마 변경 함수
@@ -29,8 +28,8 @@
 	});
 </script>
 
-<nav class="fixed top-0 z-50 flex min-h-[65px] w-full items-center justify-between border-b-2 border-app-nav-border bg-app-nav px-4 shadow-nav backdrop-blur-sm">
-	<a href="/" class="text-2xl font-bold text-app-text transition-colors hover:text-emerald-300"> MO </a>
+<nav class=" z-50 flex min-h-[65px] w-full items-center justify-between bg-bg-300 px-4">
+	<a href="/" class="text-2xl font-bold transition-colors hover:text-emerald-300"> MO </a>
 
 	<div class="flex items-center gap-2">
 		{#each themes as { id, icon, label }}

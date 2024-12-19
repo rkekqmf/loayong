@@ -6,25 +6,23 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				app: {
-					nav: 'var(--color-nav)',
-					'nav-border': 'var(--color-nav-border)',
-					box: 'var(--color-box)',
-					'box-border': 'var(--color-box-border)',
-					input: {
-						DEFAULT: 'var(--color-input)',
-						hover: 'var(--color-input-hover)',
-						border: 'var(--color-input-border)'
-					},
-					text: {
-						DEFAULT: 'var(--color-text)',
-						muted: 'var(--color-text-muted)'
-					},
-					gradient: {
-						start: 'var(--color-gradient-start)',
-						middle: 'var(--color-gradient-middle)',
-						end: 'var(--color-gradient-end)'
-					}
+				primary: {
+					100: 'var(--primary-100)',
+					200: 'var(--primary-200)',
+					300: 'var(--primary-300)'
+				},
+				accent: {
+					100: 'var(--accent-100)',
+					200: 'var(--accent-200)'
+				},
+				text: {
+					100: 'var(--text-100)',
+					200: 'var(--text-200)'
+				},
+				bg: {
+					100: 'var(--bg-100)',
+					200: 'var(--bg-200)',
+					300: 'var(--bg-300)'
 				}
 			},
 			boxShadow: {
@@ -42,15 +40,5 @@ export default {
 		}
 	},
 
-	plugins: [
-		function ({ addUtilities }) {
-			addUtilities({
-				'.text-sm-responsive': {
-					'@media (max-width: 640px)': {
-						fontSize: '0.875rem'
-					}
-				}
-			});
-		}
-	]
+	plugins: []
 } satisfies Config;
