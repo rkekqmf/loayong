@@ -14,7 +14,10 @@
 		const selectedClassCode = event.target.value;
 		selectedClass = selectedClassCode;
 		activeEngraving = ''; // 클래스 변경시 활성 각인 초기화
-		await goto(`/class/${selectedClassCode}`, { replaceState: true });
+		await goto(`/class/${selectedClassCode}`, {
+			replaceState: true,
+			noScroll: true // 스크롤 이동 방지
+		});
 	}
 
 	let activeEngraving = '';
@@ -46,27 +49,7 @@
 
 <div class="flex gap-4">
 	{#if currentEngravings.length > 0}
-		<div class="sticky top-20 mb-6 flex h-fit w-64 flex-shrink-0 flex-col gap-4">
-			<div class="relative w-64">
-				<select
-					value={currentClass.code}
-					on:change={handleClassChange}
-					class="w-full appearance-none rounded-lg bg-bg-300 px-4 py-2 pr-10 text-center text-lg
-				   font-medium focus:outline-none focus:ring-2 focus:ring-primary-100"
-				>
-					{#each classes as classItem}
-						<option value={classItem.code}>
-							{classItem.name}
-						</option>
-					{/each}
-				</select>
-				<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-					<svg class="h-5 w-5 fill-current" viewBox="0 0 20 20">
-						<path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-					</svg>
-				</div>
-			</div>
-
+		<div class=" mb-6 flex h-fit w-64 flex-shrink-0 flex-col gap-4">
 			<div class="relative flex w-full flex-col items-center justify-center gap-4">
 				<img src="/class/{currentClass.code}.png" alt={currentClass.name} class="h-24 w-24 brightness-0 invert" />
 				<p class="absolute -bottom-2 text-base text-white">{currentClass.name}</p>
@@ -80,7 +63,6 @@
 				{/each}
 			</div>
 
-			<!-- 새로운 토글 섹션 추가 -->
 			<div class="mt-4 flex flex-col gap-2">
 				<div class="">
 					<label class="toggle-container">
@@ -118,6 +100,22 @@
 						<input type="checkbox" bind:checked={toggleStates.rune} on:change={updateMasterToggle} />
 						<span class="toggle-label">룬 효과</span>
 					</label>
+				</div>
+			</div>
+
+			<div class="mt-4 border-t border-bg-300 pt-4">
+				<p class="mb-2 text-center text-sm font-medium">직업 선택</p>
+				<div class="grid grid-cols-3 gap-2">
+					{#each classes as classItem}
+						<button
+							class="flex flex-col items-center rounded-lg p-2 transition-colors
+								{currentClass.code === classItem.code ? 'bg-primary-100' : 'bg-bg-300 hover:bg-accent-100'}"
+							on:click={() => handleClassChange({ target: { value: classItem.code } })}
+						>
+							<img src="/class/{classItem.code}.png" alt={classItem.name} class="h-8 w-8 brightness-0 invert" />
+							<span class="mt-1 text-center text-xs">{classItem.name}</span>
+						</button>
+					{/each}
 				</div>
 			</div>
 		</div>
@@ -237,7 +235,7 @@
 													<p>스킬 시전 속도 +12%</p>
 												</div>
 												<div class="rune-item">
-													<p class="font-medium text-orange-400">출혈 룬</p>
+													<p class="font-medium text-orange-400">출��� 룬</p>
 													<p>5초간 출혈 대미지 추가</p>
 												</div>
 											</div>
