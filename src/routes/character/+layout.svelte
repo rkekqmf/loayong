@@ -3,9 +3,20 @@
 	import { page } from '$app/stores';
 	import { searchStore } from '$lib/stores/store';
 	import { goto } from '$app/navigation';
+	import { classData } from '$lib/data/classData';
+	import { activeSection, sectionToggles } from '$lib/stores/store';
+
 	let isLoading = false;
 	let data: any[] = [];
 	let selectedId = '';
+
+	const sections = {
+		'character-info': '캐릭터 정보',
+		'combat-stats': '전투 특성',
+		equipment: '장비',
+		collections: '수집품',
+		achievements: '업적'
+	};
 
 	const fetchData = async (id: string) => {
 		isLoading = true;
@@ -98,38 +109,124 @@
 		$searchStore = newCharacter;
 		goto(`/character/${encodeURIComponent(newCharacter)}`);
 	}
+
+	function getClassCode(className) {
+		return classData[className]?.code || '';
+	}
+
+	// 마스터 토글 변경 핸들러
+	function handleMasterToggle(checked: boolean) {
+		sectionToggles.update(() => ({
+			'character-info': checked,
+			'combat-stats': checked,
+			equipment: checked,
+			collections: checked,
+			achievements: checked
+		}));
+	}
+
+	// 개별 섹션 토글 핸들러
+	function handleSectionToggle(key: string, checked: boolean) {
+		sectionToggles.update((current) => ({
+			...current,
+			[key]: checked
+		}));
+	}
 </script>
 
-<section class="relative flex flex-[2] flex-col items-center justify-center gap-2 rounded-xl border-2 border-app-box-border bg-gradient-to-tr from-[#2c402f] to-[#354f34] p-4 shadow-box">
-	{#if !isLoading}
-		<div class="mb-10 flex items-center justify-center">
-			<select class="h-[40px] min-h-[40px] w-[320px] rounded-md border border-[#65ad7a] bg-[#3a6346] px-3 text-[#fff] focus:outline-none" bind:value={selectedId} on:change={(e) => handleSelectChange(e.currentTarget.value)}>
-				{#each sortedCharacters as { CharacterName, CharacterClassName, ItemAvgLevel }}
-					<option value={CharacterName}>
-						{CharacterName} [{CharacterClassName}] - {ItemAvgLevel}
-					</option>
-				{/each}
-			</select>
-		</div>
-	{:else}
-		<div class="flex h-[40px] w-[320px] items-center justify-center">캐릭터 정보를 불러오는 중...</div>
-	{/if}
+<section class="flex gap-4">
+	<!-- 왼쪽 사이드바: 정대 캐릭터 목록 -->
 
-	<div class="flex w-full items-center justify-center">
-		<button on:click={() => moveToCharacter('prev')} class="shrink-0 cursor-pointer text-2xl font-bold text-[#fff]">
-			<Chevron_left size="70" />
-		</button>
-		<div class="min-w-0 flex-1">
-			<slot />
+	<div class="sticky top-20 mb-6 flex h-fit w-64 flex-shrink-0 flex-col gap-4">
+		<!-- 토글 섹션 추가 -->
+		<div class="mt-4 flex flex-col gap-2">
+			<label class="toggle-container">
+				<input type="checkbox" checked={$sectionToggles && Object.values($sectionToggles).every((value) => value)} on:change={(e) => handleMasterToggle(e.currentTarget.checked)} />
+				<span class="toggle-label">전체 선택</span>
+			</label>
+
+			{#each Object.entries(sections) as [key, label]}
+				<label class="toggle-container">
+					<input type="checkbox" bind:checked={$sectionToggles[key]} on:change={(e) => handleSectionToggle(key, e.currentTarget.checked)} />
+					<span class="toggle-label">{label}</span>
+				</label>
+			{/each}
 		</div>
-		<button on:click={() => moveToCharacter('next')} class="shrink-0 cursor-pointer text-2xl font-bold text-[#fff]">
-			<Chevron_right size="70" />
-		</button>
+		<!-- 캐릭터 선택 드롭다운 -->
+		{#if !isLoading}
+			<!-- 캐릭터 목록 -->
+			<div class="flex flex-col gap-2">
+				{#each sortedCharacters as character}
+					{@const isActive = character.CharacterName === selectedId}
+					<button
+						class="flex items-center gap-2 rounded-lg bg-bg-300 p-2 transition-all hover:bg-accent-100
+							   {isActive ? 'border-2 border-primary-100' : ''}"
+						on:click={() => handleSelectChange(character.CharacterName)}
+					>
+						<img src={`/class/${getClassCode(character.CharacterClassName)}.png`} alt={character.CharacterClassName} class="h-10 w-10 rounded-full object-cover p-1 [filter:brightness(0)_invert(1)]" />
+						<div class="flex flex-col text-left">
+							<span class="text-sm">{character.CharacterName}</span>
+							<span class="text-xs text-gray-400">{character.ItemAvgLevel}</span>
+						</div>
+					</button>
+				{/each}
+			</div>
+		{:else}
+			<div class="flex h-[40px] w-full items-center justify-center">캐릭터 정보를 불러오는 중...</div>
+		{/if}
+	</div>
+
+	<!-- 오른쪽: 선택된 캐릭터 상세 정보 -->
+	<div class="flex-1 rounded-xl bg-bg-200 p-4 shadow-primary">
+		<slot />
 	</div>
 </section>
 
 <style>
 	select:focus {
 		outline: none;
+	}
+
+	.toggle-container {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		cursor: pointer;
+	}
+
+	.toggle-container input[type='checkbox'] {
+		appearance: none;
+		width: 3rem;
+		height: 1.5rem;
+		background-color: var(--bg-300);
+		border-radius: 1rem;
+		position: relative;
+		cursor: pointer;
+		transition: all 0.3s;
+	}
+
+	.toggle-container input[type='checkbox']:checked {
+		background-color: var(--primary-100);
+	}
+
+	.toggle-container input[type='checkbox']::before {
+		content: '';
+		position: absolute;
+		width: 1.25rem;
+		height: 1.25rem;
+		border-radius: 50%;
+		background-color: white;
+		top: 0.125rem;
+		left: 0.125rem;
+		transition: all 0.3s;
+	}
+
+	.toggle-container input[type='checkbox']:checked::before {
+		transform: translateX(1.5rem);
+	}
+
+	.toggle-label {
+		font-size: 0.875rem;
+		color: var(--text-100);
 	}
 </style>

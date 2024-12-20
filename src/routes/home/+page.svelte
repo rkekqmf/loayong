@@ -238,7 +238,7 @@
 
 <div>
 	{#if !isLoading}
-		<div role="toolbar" tabindex="0" class="relative mb-[-1px] flex items-center">
+		<div role="toolbar" tabindex="0" class="relative flex items-center">
 			{#each tabs.filter((tab: any) => tab.checked) as tab, i (tab.id)}
 				<button
 					id="tab-{i}"
@@ -246,22 +246,22 @@
 						duration: 200,
 						easing: (t) => t
 					}}
-					style={draggedIndex === i ? `transform: scale(1.05) translateX(${$position.x}px); background: rgba(255,255,255,0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.15);` : targetIndex === i && isDragging ? 'position: relative;' : ''}
+					style={draggedIndex === i ? `transform: scale(1.05) translateX(${$position.x}px);  box-shadow: 0 8px 24px rgba(0,0,0,0.15);` : targetIndex === i && isDragging ? 'position: relative;' : ''}
 					on:mousedown={(e) => handleMouseDown(e, e.currentTarget, i)}
 					on:mouseenter={() => handleMouseEnter(i)}
 					on:mouseleave={handleMouseLeave}
 					on:click={() => switchTab(tab.id)}
 					class="group relative rounded-t-lg px-4 py-2
-						{activeTab === tab.id ? ' bg-primary-200' : 'bg-bg-300 hover:bg-bg-200'}
+						{activeTab === tab.id ? 'bg-bg-100' : 'bg-bg-300 hover:bg-bg-100'}
 						{isDragging ? 'cursor-grabbing select-none' : ''}
 						{draggedIndex === i ? 'z-10' : ''}
 						transition-all duration-200 ease-out"
 				>
 					{#if targetIndex === i && isDragging}
-						<div class="absolute inset-0 animate-[pulse_0.5s_ease-in-out_infinite] rounded-t-lg bg-primary-200 opacity-10"></div>
+						<div class="absolute inset-0 animate-[pulse_0.5s_ease-in-out_infinite] rounded-t-lg bg-bg-100 opacity-10"></div>
 					{/if}
 					<div
-						class="absolute inset-x-0 -top-4 flex justify-center opacity-0
+						class="absolute inset-x-0 -top-4 flex justify-center
 						{!isDragging ? 'transition-opacity group-hover:opacity-100' : ''}"
 					>
 						<svg class="h-3 w-3 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
@@ -289,7 +289,7 @@
 			</button>
 		</div>
 
-		<section class="flex min-h-[600px] items-center justify-center rounded-b-xl bg-primary-200">
+		<section class="relative z-10 mb-8 flex min-h-[600px] justify-center rounded-b-xl bg-bg-200 shadow-primary">
 			{#if activeTab === 'calculator'}
 				<svelte:component this={Calculator} />
 			{:else if activeTab === 'homework'}
@@ -367,7 +367,7 @@
 					<!-- 버튼들 -->
 					<div class="flex justify-end gap-2">
 						<button on:click={closeSettings} class="rounded px-4 py-2 hover:bg-gray-500"> 취소 </button>
-						<button on:click={saveSettings} class="rounded bg-primary-200 px-4 py-2 hover:bg-primary-100"> 저장 </button>
+						<button on:click={saveSettings} class="rounded bg-primary-100 px-4 py-2 hover:bg-primary-100"> 저장 </button>
 					</div>
 				</div>
 			</div>

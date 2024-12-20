@@ -10,13 +10,13 @@
 <div class="relative w-full">
 	<input
 		type="text"
-		class="peer h-[55px] w-full rounded-xl bg-bg-300 py-3 pl-12 pr-4 text-base placeholder-text-200 transition-colors duration-200 ease-in-out focus:bg-bg-200 focus:outline-none md:pl-14 md:text-2xl"
+		class="peer h-[55px] w-full rounded-xl bg-bg-300 py-3 pl-12 pr-4 text-base placeholder-text-200 transition-colors duration-200 ease-in-out focus:border-2 focus:border-primary-100 focus:bg-bg-200 focus:outline-none md:pl-14 md:text-2xl"
 		placeholder="닉네임"
 		bind:value={searchQuery}
 		on:keydown={(e) => e.key === 'Enter' && handleSearch()}
 	/>
 	<button class="absolute inset-y-0 right-5 flex items-center text-base text-text-200 transition-colors duration-200 ease-in-out hover:text-text-100 md:text-2xl" on:click={handleSearch}>검색</button>
-	<div class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-text-200 transition-colors duration-200 ease-in-out peer-focus:text-text-100">
+	<div class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-text-200 transition-colors duration-200 ease-in-out peer-focus:text-primary-100">
 		{@html searchIcon}
 	</div>
 </div>

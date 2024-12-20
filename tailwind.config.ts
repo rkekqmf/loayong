@@ -26,9 +26,8 @@ export default {
 				}
 			},
 			boxShadow: {
-				nav: '0 12px 8px rgba(63,127,77,0.3)',
-				footer: '0 -4px 4px rgba(63,127,77,0.3)',
-				box: '0 0 16px 0 rgba(210, 253, 235, 0.5)'
+				primary: `8px 8px 30px -5px rgba(255, 255, 255, 0.2),
+                   -8px 8px 30px -5px rgba(255, 255, 255, 0.2)`
 			},
 			screens: {
 				sm: '640px',
