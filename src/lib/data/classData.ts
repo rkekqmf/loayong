@@ -1,5 +1,150 @@
 // 공통으로 사용되는 이미지 번호들
-export const commonRevolutionImages = [1, 2, 3, 4, 5, 6, 12, 14, 16, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 32, 33, 34, 35, 38];
+export const commonRevolutionImages = [
+	{
+		id: 1,
+		imageNum: 1,
+		name: '치명',
+		order: 1
+	},
+	{
+		id: 2,
+		imageNum: 2,
+		name: '특화',
+		order: 2
+	},
+	{
+		id: 3,
+		imageNum: 3,
+		name: '제압',
+		order: 3
+	},
+	{
+		id: 4,
+		imageNum: 4,
+		name: '신속',
+		order: 4
+	},
+	{
+		id: 5,
+		imageNum: 5,
+		name: '인내',
+		order: 5
+	},
+	{
+		id: 6,
+		imageNum: 6,
+		name: '숙련',
+		order: 6
+	},
+	{
+		id: 7,
+		imageNum: 16,
+		name: '끝없는 마나',
+		order: 7
+	},
+	{
+		id: 8,
+		imageNum: 12,
+		name: '금단의 주문',
+		order: 8
+	},
+	{
+		id: 9,
+		imageNum: 29,
+		name: '예리한 감각',
+		order: 9
+	},
+	{
+		id: 10,
+		imageNum: 34,
+		name: '한계 돌파',
+		order: 10
+	},
+	{
+		id: 11,
+		imageNum: 22,
+		name: '최적화 훈련',
+		order: 11
+	},
+	{
+		id: 12,
+		imageNum: 19,
+		name: '축복의 여신',
+		order: 12
+	},
+	{
+		id: 13,
+		imageNum: 14,
+		name: '무한한 마력',
+		order: 13
+	},
+	{
+		id: 14,
+		imageNum: 27,
+		name: '혼신의 강타',
+		order: 14
+	},
+	{
+		id: 15,
+		imageNum: 32,
+		name: '일격',
+		order: 15
+	},
+	{
+		id: 16,
+		imageNum: 35,
+		name: '파괴 전차',
+		order: 16
+	},
+	{
+		id: 17,
+		imageNum: 23,
+		name: '타이밍 지배',
+		order: 17
+	},
+	{
+		id: 18,
+		imageNum: 33,
+		name: '정열의 춤사위',
+		order: 18
+	},
+	{
+		id: 19,
+		imageNum: 20,
+		name: '뭉툭한 가시',
+		order: 19
+	},
+	{
+		id: 20,
+		imageNum: 21,
+		name: '음속 돌파',
+		order: 20
+	},
+	{
+		id: 21,
+		imageNum: 38,
+		name: '인파이팅',
+		order: 21
+	},
+	{
+		id: 22,
+		imageNum: 18,
+		name: '입식 타격가',
+		order: 22
+	},
+	{
+		id: 23,
+		imageNum: 24,
+		name: '마나 용광로',
+		order: 23
+	},
+	{
+		id: 24,
+		imageNum: 25,
+		name: '안정된 관리자',
+		order: 24
+	}
+];
 export const commonFolder01Images: number[] = []; // 01 폴더의 공통 이미지 번호
 export const commonFolder02Images: number[] = []; // 02 폴더의 공통 이미지 번호
 
@@ -510,6 +655,36 @@ export const classData = {
 	환수사: {
 		code: 'sw',
 		name: '환수사',
+		revolution: commonRevolutionImages,
+		ggadal: {
+			folder01: [],
+			folder02: [],
+			class: []
+		},
+		jump: {
+			folder01: [],
+			folder02: [],
+			class: [1, 2, 3, 5]
+		}
+	},
+	암살자: {
+		code: 'wa',
+		name: '암살자',
+		revolution: commonRevolutionImages,
+		ggadal: {
+			folder01: [],
+			folder02: [],
+			class: []
+		},
+		jump: {
+			folder01: [],
+			folder02: [],
+			class: [1, 2, 3, 5]
+		}
+	},
+	스폐셜리스트: {
+		code: 'wa',
+		name: '스폐셜리스트',
 		revolution: commonRevolutionImages,
 		ggadal: {
 			folder01: [],

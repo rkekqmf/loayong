@@ -47,7 +47,7 @@
 	$: console.log('masterToggle:', masterToggle);
 </script>
 
-<div class="flex gap-4">
+<div class="flex w-full gap-4">
 	{#if currentEngravings.length > 0}
 		<div class=" mb-6 flex h-fit w-64 flex-shrink-0 flex-col gap-4">
 			<div class="relative flex w-full flex-col items-center justify-center gap-4">
@@ -120,7 +120,7 @@
 			</div>
 		</div>
 
-		<div class="engraving-container">
+		<div class="engraving-container w-full">
 			<!-- 선택된 각인 정보 표시 영역 -->
 			{#if activeEngraving}
 				<div class="engraving-details min-h-[600px]" transition:slide>

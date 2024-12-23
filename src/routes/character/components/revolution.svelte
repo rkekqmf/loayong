@@ -1,8 +1,9 @@
 <script>
 	import { classData, commonRevolutionImages } from '$lib/data/classData';
+	import { fly } from 'svelte/transition';
 	export let data;
 	export let characterClassName;
-
+	let hoveringItems = {};
 	function handleImageError(event) {
 		event.target.style.display = 'none';
 	}
@@ -34,31 +35,36 @@
 		})) || [];
 </script>
 
-<section class="chartContainer">
-	<h2 class="mb-6 inline-block border-b-2 border-yellow-500 pb-2 text-2xl text-white">진화</h2>
-	<div class="grid grid-cols-6 gap-3 rounded-lg p-4">
-		{#each commonRevolutionImages as num}
-			{@const evolutionInfo = evolutionData.find((data) => data.iconNum === num)}
-			<div class="relative">
+<article>
+	<div class="grid grid-cols-6 gap-3 rounded-lg">
+		{#each commonRevolutionImages as { imageNum, name } (imageNum)}
+			{@const evolutionInfo = evolutionData.find((data) => data.iconNum === imageNum)}
+			<div class="relative aspect-square w-full" role="button" tabindex="0" on:mouseenter={() => (hoveringItems[imageNum] = true)} on:mouseleave={() => (hoveringItems[imageNum] = false)}>
 				<img
-					src="/ark_passive/00/{num}.png"
-					alt="진화 {num}"
+					src="/ark_passive/00/{imageNum}.png"
+					alt={name}
 					on:error={handleImageError}
-					class="h-20 w-20 rounded-md border border-gray-200 {evolutionInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
+					class="h-full w-full rounded-md border border-gray-200 object-contain {evolutionInfo ? 'transition-transform hover:scale-110 hover:shadow-md' : ''}"
 					style="opacity: {evolutionInfo ? '1' : '0.5'}"
-					title={num.toString()}
 				/>
 				{#if evolutionInfo}
-					<div class="absolute bottom-[4px]">
+					<div class="absolute bottom-0">
 						<span class="rounded bg-black bg-opacity-70 px-1.5 py-0.5 text-xs text-white">
 							Lv.{evolutionInfo.level}
 						</span>
 					</div>
 				{/if}
+				{#if hoveringItems[imageNum]}
+					<div class="absolute inset-0 flex items-center justify-center" transition:fly={{ y: 20, duration: 300 }}>
+						<div class="rounded-md bg-black bg-opacity-80 p-2 text-sm text-white">
+							{name}
+						</div>
+					</div>
+				{/if}
 			</div>
 		{/each}
 	</div>
-</section>
+</article>
 
 <style>
 </style>

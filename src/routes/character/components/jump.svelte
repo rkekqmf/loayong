@@ -29,8 +29,7 @@
 </script>
 
 <section class="chartContainer">
-	<h2 class="mb-6 inline-block border-b-2 border-green-500 pb-2 text-2xl text-white">도약</h2>
-	<div class="flex flex-wrap gap-3 rounded-lg p-4">
+	<div class="flex flex-wrap gap-3 rounded-lg">
 		{#each folder01JumpImages as num}
 			{@const jumpInfo = jumpData.find((data) => data.iconNum === num)}
 			<img

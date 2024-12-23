@@ -39,7 +39,6 @@
 </script>
 
 <section class="chartContainer">
-	<h2 class="mb-6 inline-block border-b-2 border-blue-500 pb-2 text-2xl text-white">깨달음</h2>
 	<div class="grid-layout">
 		{#each folder01GgadalImages as imageNum, i}
 			{@const ggadalInfo = ggadalData.find((data) => data.iconNum === imageNum)}
@@ -91,7 +90,6 @@
 		grid-template-columns: repeat(4, 1fr);
 		grid-template-rows: repeat(5, 1fr);
 		gap: 1rem;
-		padding: 1rem;
 		justify-items: center;
 		max-width: 600px;
 		margin: 0 auto;
