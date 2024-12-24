@@ -175,33 +175,24 @@
 		{:else}
 			<div class="flex flex-col gap-2">
 				<div class="flex flex-col gap-2">
-					<div class="flex flex-col items-center gap-4 rounded-xl bg-bg-300 p-4">
+					<div class="relative flex h-full w-full flex-col overflow-hidden rounded-xl p-4">
 						<!-- 캐릭터 정보 -->
-						<div class="flex flex-col gap-1">
-							<!-- 캐릭터 이름 & 레벨 -->
-							<div class="flex items-center gap-2">
-								<span class="text-2xl font-bold">{profileData?.CharacterName}</span>
-								<span class="text-lg text-primary-100">{profileData?.ItemMaxLevel}</span>
+						<div class="flex w-full justify-between">
+							<img
+								src={`/class/${getClassCode(profileData?.CharacterClassName)}.png`}
+								alt={profileData?.CharacterClassName}
+								class="object-cover [filter:brightness(0)_invert(1)]
+								{profileData?.CharacterName?.length <= 10 ? 'h-14 w-14' : 'h-12 w-12'}"
+							/>
+							<div class="flex w-full flex-col items-end justify-center">
+								<p class="text-lg font-bold">{profileData?.ItemMaxLevel}</p>
+								<p
+									class="font-semibold
+									{profileData?.CharacterName?.length <= 5 ? 'text-xl' : profileData?.CharacterName?.length <= 10 ? 'text-lg' : 'text-md'}"
+								>
+									{profileData?.CharacterName}
+								</p>
 							</div>
-
-							<div class="flex items-center gap-2 text-sm text-gray-400">
-								{#if profileData?.Title}
-									<span>《{profileData?.Title}》</span>
-								{/if}
-								{#if profileData?.GuildName}
-									<span>길드: {profileData?.GuildName}</span>
-								{/if}
-							</div>
-						</div>
-
-						<!-- 캐릭터 이미지 -->
-						<div class="relative flex h-[300px] w-full items-center justify-center overflow-hidden bg-bg-300">
-							{#if profileData?.CharacterImage}
-								<img alt={profileData?.CharacterName} width="200" src={profileData.CharacterImage} class="h-full w-auto object-contain" style="color: transparent;" />
-								<div class="absolute inset-0 bg-bg-300 mix-blend-lighten"></div>
-							{:else}
-								<div class="text-gray-400">이미지 로딩 중...</div>
-							{/if}
 						</div>
 					</div>
 				</div>
@@ -224,20 +215,24 @@
 					</div>
 				</div>
 
-				{#each sortedCharacters as character}
-					{@const isActive = character.CharacterName === selectedId}
-					<button
-						class="flex items-center gap-2 rounded-lg border-2 bg-bg-300 p-2 transition-colors
+				<div class="mt-4 border-t border-bg-300 pt-2"></div>
+				<p class="mb-2 text-center text-sm font-medium">원정대</p>
+				<div class="results-container flex max-h-[400px] w-full flex-col gap-2 overflow-y-auto pr-2">
+					{#each sortedCharacters as character}
+						{@const isActive = character.CharacterName === selectedId}
+						<button
+							class="flex items-center gap-2 rounded-lg border-2 bg-bg-300 p-2 transition-colors
 							   {isActive ? 'border-primary-100' : 'border-transparent'}"
-						on:click={() => handleSelectChange(character.CharacterName)}
-					>
-						<img src={`/class/${getClassCode(character.CharacterClassName)}.png`} alt={character.CharacterClassName} class="h-10 w-10 rounded-full object-cover p-1 [filter:brightness(0)_invert(1)]" />
-						<div class="flex flex-col text-left">
-							<span class="text-sm">{character.CharacterName}</span>
-							<span class="text-xs text-gray-400">{character.ItemAvgLevel}</span>
-						</div>
-					</button>
-				{/each}
+							on:click={() => handleSelectChange(character.CharacterName)}
+						>
+							<img src={`/class/${getClassCode(character.CharacterClassName)}.png`} alt={character.CharacterClassName} class="h-10 w-10 rounded-full object-cover p-1 [filter:brightness(0)_invert(1)]" />
+							<div class="flex flex-col text-left">
+								<span class="text-sm">{character.CharacterName}</span>
+								<span class="text-xs text-gray-400">{character.ItemAvgLevel}</span>
+							</div>
+						</button>
+					{/each}
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -299,5 +294,20 @@
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	/* 스크롤바 스타일링 */
+	.results-container::-webkit-scrollbar {
+		width: 4px; /* 스크롤바 너비 */
+	}
+	.results-container::-webkit-scrollbar-track {
+		background: #313131;
+	}
+	.results-container::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+	.results-container::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.4); /* 호버 시 스크롤바 색상 */
 	}
 </style>

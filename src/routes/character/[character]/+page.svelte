@@ -9,6 +9,7 @@
 	import Sasagae from '../components/sasagae.svelte';
 	import { slide } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import { classData } from '$lib/data/classData';
 
 	let data: any = null;
 	let chartData: any[] = [];
@@ -116,6 +117,10 @@
 			]
 		}
 	};
+
+	function getClassCode(className) {
+		return classData[className]?.code || '';
+	}
 </script>
 
 {#if isLoading}
@@ -157,7 +162,7 @@
 	<div class="engraving-container">
 		<div class="engraving-content">
 			<div class="accordion-sections">
-				<!-- 캐릭터 정보 섹션 -->
+				<!-- 캐릭터 정보 섹션
 				{#if $sectionToggles.sasagae}
 					<div class="accordion-item">
 						<div in:slide={{ duration: 500 }} out:slide={{ duration: 500 }}>
@@ -167,6 +172,54 @@
 							</div>
 							<div class="section-content">
 								<Sasagae data={arkPassiveData} characterClassName={data.CharacterClassName} />
+							</div>
+						</div>
+					</div>
+				{/if} -->
+
+				캐릭터 정보 섹션
+				{#if $sectionToggles.sasagae}
+					<div class="accordion-item">
+						<div in:slide={{ duration: 500 }} out:slide={{ duration: 500 }}>
+							<div class="section-header">
+								{sections.sasagae}
+								<div class="mt-2 border-b-2 border-primary-100"></div>
+							</div>
+							<div class="section-content">
+								<div class="relative flex h-full min-h-[300px] w-full overflow-hidden rounded-xl p-4">
+									<!-- 캐릭터 정보 -->
+									<div class="flex w-full flex-col items-center justify-center gap-2">
+										<div class="z-50 flex w-full items-center justify-center gap-2">
+											<img src={`/class/${getClassCode(data?.CharacterClassName)}.png`} alt={data?.CharacterClassName} class="h-10 w-10 object-cover [filter:brightness(0)_invert(1)]" />
+											<span class="text-2xl font-semibold">{data?.ItemMaxLevel}</span>
+										</div>
+
+										<div class="z-50 flex w-full flex-col items-center">
+											<div class="-mt-2 flex w-full flex-col items-center">
+												{#if data?.ServerName}
+													<span class="text-xs text-gray-400">《 {data?.ServerName} 》</span>
+												{/if}
+												{#if data?.Title}
+													<span class="text-xs text-orange-300">《 {data?.Title} 》</span>
+												{/if}
+												{#if data?.GuildName}
+													<span class="text-xs text-green-400">《 {data?.GuildName} 》</span>
+												{/if}
+											</div>
+										</div>
+
+										<span class="mb-1 w-full text-center text-xl font-semibold">{data?.CharacterName}</span>
+									</div>
+
+									<!-- 캐릭터 이미지 -->
+
+									<div class="flex h-[200px] w-full items-center justify-center overflow-hidden bg-bg-100">
+										{#if data?.CharacterImage}
+											<img alt={data?.CharacterName} width="100" src={data.CharacterImage} class="h-full w-auto object-contain" style="color: transparent;" />
+											<div class="absolute inset-0 bg-bg-100 mix-blend-lighten"></div>
+										{/if}
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -349,6 +402,7 @@
 	}
 
 	.section-header {
+		padding: 1rem;
 		font-weight: 600;
 		font-size: 1.1rem;
 		background-color: var(--bg-200);
@@ -458,12 +512,6 @@
 	.svg-wrapper2:hover #text,
 	.svg-wrapper3:hover #text {
 		color: white;
-	}
-	/* Active text color - 별도로 분리 */
-	.svg-wrapper1 svg.active #text,
-	.svg-wrapper2 svg.active #text,
-	.svg-wrapper3 svg.active #text {
-		color: white !important; /* 우선순위 강제 적용 */
 	}
 
 	/* Hover & Active text colors */
