@@ -14,9 +14,10 @@
 	let currentId = '';
 
 	const sections = {
+		detail: '정보',
 		sasagae: '사사게',
 		arkpassive: '아크패시브',
-		'combat-stats': '전투 특성',
+		stats: '전투 특성',
 		equipment: '장비',
 		collections: '수집품',
 		achievements: '업적'
@@ -59,7 +60,6 @@
 
 	// 버튼 클릭을 통한 캐릭터 선택 (API 호출 없이 기존 데이터 사용)
 	function handleSelectChange(newValue: string) {
-		console.log('캐릭터 선택됨:', newValue);
 		if (newValue) {
 			$searchStore = newValue;
 			goto(`/character/${encodeURIComponent(newValue)}`, {
@@ -104,9 +104,10 @@
 	// 마스터 토글 변경 핸들러
 	function handleMasterToggle(checked: boolean) {
 		sectionToggles.update(() => ({
+			detail: checked,
 			sasagae: checked,
 			arkpassive: checked,
-			'combat-stats': checked,
+			stats: checked,
 			equipment: checked,
 			collections: checked,
 			achievements: checked
@@ -139,7 +140,6 @@
 				throw new Error(`API 요청 실패 (${response.status})`);
 			}
 			const profileData = await response.json();
-			console.log(profileData);
 			return profileData;
 		} catch (error) {
 			console.error('데이터 로딩 오류:', error);

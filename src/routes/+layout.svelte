@@ -20,11 +20,8 @@
 
 	// 검색 처리 함수
 	function handleSearch() {
-		console.log(searchQuery);
 		if (searchQuery.trim()) {
-			console.log('검색어 저장:', searchQuery); // 디버깅 로그
 			$searchStore = searchQuery;
-			console.log('저장된 스토어 값:', $searchStore); // 디버깅 로그
 			goto(`/character/${encodeURIComponent(searchQuery)}`);
 		}
 	}

@@ -3,19 +3,27 @@
 	import { page } from '$app/stores';
 	import { activeSection, sectionToggles } from '$lib/stores/store';
 	import Chart from '../components/chart.svelte';
-	import Revolution from '../components/revolution.svelte';
-	import Ggadal from '../components/ggadal.svelte';
-	import Jump from '../components/jump.svelte';
-	import Sasagae from '../components/sasagae.svelte';
+
 	import { slide } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
-	import { classData } from '$lib/data/classData';
+	import Detail from '../components/item-detail.svelte';
+	import Sasagae from '../components/item-sasagae.svelte';
+	import Arkpassive from '../components/item-arkpassive.svelte';
+	import Skill from '../components/item-skill.svelte';
 
 	let data: any = null;
 	let chartData: any[] = [];
 	let arkPassiveData: any = null;
 	let isLoading = true;
-	let activeTab = '진화';
+	let characterId: string;
+
+	$: {
+		if ($page.url.pathname) {
+			characterId = $page.url.pathname.split('/')[2];
+			if (characterId) {
+				fetchData(characterId);
+			}
+		}
+	}
 
 	const fetchData = async (id: string) => {
 		isLoading = true;
@@ -69,39 +77,21 @@
 		}
 	};
 
-	$: {
-		if ($page.url.pathname) {
-			const id = $page.url.pathname.split('/')[2];
-			if (id) {
-				fetchData(id);
-			}
-		}
-	}
-
 	// 섹션 정의
 	const sections = {
+		detail: '정보',
 		sasagae: '사사게',
 		arkpassive: '캐릭터 정보',
-		'combat-stats': '전투 특성',
+		stats: '전투 특성',
 		equipment: '장비',
 		collections: '수집품',
 		achievements: '업적'
 	};
 
-	// 테스트 데이터 추가
 	const testData = {
-		combat: {
-			치명: 1543,
-			특화: 1782,
-			신속: 532,
-			제압: 45,
-			인내: 45,
-			숙련: 45
-		},
 		equipment: [
 			{ name: '고대 무기', level: 25, quality: 100 },
 			{ name: '고대 투구', level: 25, quality: 98 }
-			// ... 더 많은 장비 데이터
 		],
 		collections: {
 			모코코: '1234/1234',
@@ -117,115 +107,40 @@
 			]
 		}
 	};
-
-	function getClassCode(className) {
-		return classData[className]?.code || '';
-	}
 </script>
 
-{#if isLoading}
-	<div class="flex h-full min-h-[765px] w-full flex-col gap-4">
-		<div class="flex flex-col gap-4 md:flex-row">
-			<div class="flex min-w-[300px] flex-col items-center justify-center rounded-lg bg-bg-300 p-4 shadow-primary">
-				<div class="animate-pulse">
-					<div class="mb-2 h-4 w-20 rounded bg-bg-100"></div>
-					<div class="mb-4 h-8 w-32 rounded bg-bg-100"></div>
-					<div class="h-[300px] w-full rounded-lg bg-bg-100"></div>
-				</div>
-			</div>
-			<div class="flex-1 rounded-lg bg-bg-300 shadow-primary">
-				<div class="animate-pulse p-4">
-					<div class="h-full w-full rounded bg-bg-100"></div>
-				</div>
-			</div>
-		</div>
-
-		<div class="flex flex-col">
-			<div class="mb-4 flex justify-center gap-4">
-				{#each ['revolution', 'ggadal', 'jump'] as tab}
-					<button
-						class="rounded-lg px-4 py-2 transition-all duration-200
-							{activeTab === tab ? 'bg-primary-100 text-white shadow-primary' : 'bg-bg-300 hover:bg-bg-100'}"
-						on:click={() => (activeTab = tab)}
-					>
-						{tab.charAt(0).toUpperCase() + tab.slice(1)}
-					</button>
-				{/each}
-			</div>
-
-			<div class="h-[600px] rounded-lg bg-bg-300 p-4">
-				<div class="h-full w-full animate-pulse rounded bg-bg-100"></div>
-			</div>
-		</div>
-	</div>
-{:else if data}
+{#if data}
 	<div class="engraving-container">
 		<div class="engraving-content">
 			<div class="accordion-sections">
-				<!-- 캐릭터 정보 섹션
-				{#if $sectionToggles.sasagae}
+				{#if $sectionToggles.detail}
 					<div class="accordion-item">
 						<div in:slide={{ duration: 500 }} out:slide={{ duration: 500 }}>
 							<div class="section-header">
-								{sections.sasagae}
+								{sections.detail}
 								<div class="mt-2 border-b-2 border-primary-100"></div>
 							</div>
 							<div class="section-content">
-								<Sasagae data={arkPassiveData} characterClassName={data.CharacterClassName} />
-							</div>
-						</div>
-					</div>
-				{/if} -->
-
-				캐릭터 정보 섹션
-				{#if $sectionToggles.sasagae}
-					<div class="accordion-item">
-						<div in:slide={{ duration: 500 }} out:slide={{ duration: 500 }}>
-							<div class="section-header">
-								{sections.sasagae}
-								<div class="mt-2 border-b-2 border-primary-100"></div>
-							</div>
-							<div class="section-content">
-								<div class="relative flex h-full min-h-[300px] w-full overflow-hidden rounded-xl p-4">
-									<!-- 캐릭터 정보 -->
-									<div class="flex w-full flex-col items-center justify-center gap-2">
-										<div class="z-50 flex w-full items-center justify-center gap-2">
-											<img src={`/class/${getClassCode(data?.CharacterClassName)}.png`} alt={data?.CharacterClassName} class="h-10 w-10 object-cover [filter:brightness(0)_invert(1)]" />
-											<span class="text-2xl font-semibold">{data?.ItemMaxLevel}</span>
-										</div>
-
-										<div class="z-50 flex w-full flex-col items-center">
-											<div class="-mt-2 flex w-full flex-col items-center">
-												{#if data?.ServerName}
-													<span class="text-xs text-gray-400">《 {data?.ServerName} 》</span>
-												{/if}
-												{#if data?.Title}
-													<span class="text-xs text-orange-300">《 {data?.Title} 》</span>
-												{/if}
-												{#if data?.GuildName}
-													<span class="text-xs text-green-400">《 {data?.GuildName} 》</span>
-												{/if}
-											</div>
-										</div>
-
-										<span class="mb-1 w-full text-center text-xl font-semibold">{data?.CharacterName}</span>
-									</div>
-
-									<!-- 캐릭터 이미지 -->
-
-									<div class="flex h-[200px] w-full items-center justify-center overflow-hidden bg-bg-100">
-										{#if data?.CharacterImage}
-											<img alt={data?.CharacterName} width="100" src={data.CharacterImage} class="h-full w-auto object-contain" style="color: transparent;" />
-											<div class="absolute inset-0 bg-bg-100 mix-blend-lighten"></div>
-										{/if}
-									</div>
-								</div>
+								<Detail {data} />
 							</div>
 						</div>
 					</div>
 				{/if}
 
-				<!-- 캐릭터 정보 섹션 -->
+				{#if $sectionToggles.sasagae}
+					<div class="accordion-item">
+						<div in:slide={{ duration: 500 }} out:slide={{ duration: 500 }}>
+							<div class="section-header">
+								{sections.sasagae}
+								<div class="mt-2 border-b-2 border-primary-100"></div>
+							</div>
+							<div class="section-content">
+								<Sasagae />
+							</div>
+						</div>
+					</div>
+				{/if}
+
 				{#if $sectionToggles.arkpassive}
 					<div class="accordion-item">
 						<div in:slide={{ duration: 500 }} out:slide={{ duration: 500 }}>
@@ -233,72 +148,29 @@
 								{sections.arkpassive}
 								<div class="mt-2 border-b-2 border-primary-100"></div>
 							</div>
-							<div class="section-content p-4">
-								<!-- 탭 버튼들 -->
-								<div class="mb-4 flex justify-center gap-4">
-									<button class="svg-wrapper1 text-lg" on:click={() => (activeTab = '진화')}>
-										<svg height="40" width="150" xmlns="http://www.w3.org/2000/svg" class={activeTab === '진화' ? 'active' : ''}>
-											<rect id="shape" height="40" width="150" />
-										</svg>
-										<div id="text">
-											<span class="spot"></span>진화
-										</div>
-									</button>
-									<button class="svg-wrapper2 text-lg" on:click={() => (activeTab = '깨달음')}>
-										<svg height="40" width="150" xmlns="http://www.w3.org/2000/svg" class={activeTab === '깨달음' ? 'active' : ''}>
-											<rect id="shape" height="40" width="150" />
-										</svg>
-										<div id="text">
-											<span class="spot"></span>깨달음
-										</div>
-									</button>
-									<button class="svg-wrapper3 text-lg" on:click={() => (activeTab = '도약')}>
-										<svg height="40" width="150" xmlns="http://www.w3.org/2000/svg" class={activeTab === '도약' ? 'active' : ''}>
-											<rect id="shape" height="40" width="150" />
-										</svg>
-										<div id="text">
-											<span class="spot"></span>도약
-										</div>
-									</button>
-								</div>
-
-								<!-- 탭 내용 -->
-								{#if activeTab === '진화'}
-									<div class="tab-content"><Revolution data={arkPassiveData} characterClassName={data.CharacterClassName} /></div>
-								{:else if activeTab === '깨달음'}
-									<div class="tab-content"><Ggadal data={arkPassiveData} characterClassName={data.CharacterClassName} /></div>
-								{:else if activeTab === '도약'}
-									<div class="tab-content"><Jump data={arkPassiveData} characterClassName={data.CharacterClassName} /></div>
-								{/if}
+							<div class="section-content">
+								<Arkpassive {arkPassiveData} {data} />
 							</div>
 						</div>
 					</div>
 				{/if}
 
 				<!-- 전투 특성 섹션 -->
-				{#if $sectionToggles['combat-stats']}
+				{#if $sectionToggles.stats}
 					<div class="accordion-item">
 						<div in:slide={{ duration: 300 }} out:slide={{ duration: 300 }}>
 							<div class="section-header">
-								{sections['combat-stats']}
+								{sections.stats}
 								<div class="mt-2 border-b-2 border-primary-100"></div>
 							</div>
 							<div class="section-content">
-								<div class="grid grid-cols-2 gap-4 p-4 md:grid-cols-3">
-									{#each Object.entries(testData.combat) as [stat, value]}
-										<div class="rounded-lg bg-bg-200 p-4">
-											<p class="text-primary-100">{stat}</p>
-											<p class="text-2xl font-bold">{value}</p>
-										</div>
-									{/each}
-								</div>
+								<Skill {characterId} />
 							</div>
 						</div>
 					</div>
 				{/if}
 
-				<!-- 장비 섹션 -->
-				{#if $sectionToggles.equipment}
+				<!-- {#if $sectionToggles.equipment}
 					<div class="accordion-item">
 						<div in:slide={{ duration: 300 }} out:slide={{ duration: 300 }}>
 							<div class="section-header">
@@ -322,7 +194,6 @@
 					</div>
 				{/if}
 
-				<!-- 수집품 섹션 -->
 				{#if $sectionToggles.collections}
 					<div class="accordion-item">
 						<div in:slide={{ duration: 300 }} out:slide={{ duration: 300 }}>
@@ -343,7 +214,6 @@
 					</div>
 				{/if}
 
-				<!-- 업적 섹션 -->
 				{#if $sectionToggles.achievements}
 					<div class="accordion-item">
 						<div in:slide={{ duration: 300 }} out:slide={{ duration: 300 }}>
@@ -367,7 +237,7 @@
 							</div>
 						</div>
 					</div>
-				{/if}
+				{/if} -->
 			</div>
 		</div>
 	</div>
@@ -426,101 +296,4 @@
     fills the parent and makes the hover and link work
     for the entire div
 */
-
-	.spot {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		left: 0;
-	}
-
-	.svg-wrapper1,
-	.svg-wrapper2,
-	.svg-wrapper3 {
-		position: relative;
-		width: 150px;
-		height: 40px;
-		display: inline-block;
-		cursor: pointer;
-	}
-
-	#shape {
-		stroke-width: 6px;
-		fill: transparent;
-		stroke: #858585;
-		stroke-dasharray: 85 400;
-		stroke-dashoffset: -220;
-		transition: 1s all ease;
-	}
-
-	#text {
-		margin-top: -35px;
-		text-align: center;
-		color: #858585;
-		transition: 0.3s all ease;
-	}
-
-	/* Hover effects */
-	.svg-wrapper1:hover #shape {
-		stroke: #ffd700;
-		stroke-dasharray: 50 0;
-		stroke-width: 3px;
-		stroke-dashoffset: 0;
-	}
-
-	.svg-wrapper2:hover #shape {
-		stroke: #1e90ff;
-		stroke-dasharray: 50 0;
-		stroke-width: 3px;
-		stroke-dashoffset: 0;
-	}
-
-	.svg-wrapper3:hover #shape {
-		stroke: #32cd32;
-		stroke-dasharray: 50 0;
-		stroke-width: 3px;
-		stroke-dashoffset: 0;
-	}
-
-	/* Active states */
-	.svg-wrapper1 svg.active #shape {
-		stroke: #ffd700;
-		stroke-dasharray: 50 0;
-		stroke-width: 3px;
-		stroke-dashoffset: 0;
-	}
-
-	.svg-wrapper2 svg.active #shape {
-		stroke: #1e90ff;
-		stroke-dasharray: 50 0;
-		stroke-width: 3px;
-		stroke-dashoffset: 0;
-	}
-
-	.svg-wrapper3 svg.active #shape {
-		stroke: #32cd32;
-
-		stroke-dasharray: 50 0;
-		stroke-width: 3px;
-		stroke-dashoffset: 0;
-	}
-
-	/* ... 다른 스타일들은 그대로 ... */
-	/* Hover effects */
-	.svg-wrapper1:hover #text,
-	.svg-wrapper2:hover #text,
-	.svg-wrapper3:hover #text {
-		color: white;
-	}
-
-	/* Hover & Active text colors */
-	.svg-wrapper1:hover #text,
-	.svg-wrapper2:hover #text,
-	.svg-wrapper3:hover #text,
-	.svg-wrapper1:has(svg.active) #text,
-	.svg-wrapper2:has(svg.active) #text,
-	.svg-wrapper3:has(svg.active) #text {
-		color: white;
-	}
 </style>

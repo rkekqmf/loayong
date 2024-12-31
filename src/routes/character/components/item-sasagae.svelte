@@ -36,16 +36,14 @@
 	onMount(() => {
 		searchPromise = (async () => {
 			// 실제 API 호출 대신 테스트 데이터 사용
-			searchResults = testResults;
-			return searchResults;
+			// searchResults = testResults;
+			// return searchResults;
 
 			// 기존 코드는 주석 처리
-			/*
 			const currentPath = $page.url.pathname;
 			const keyword = currentPath.startsWith('/character/') ? decodeURIComponent(currentPath.split('/')[2]) : '';
 
 			try {
-				console.log('keyword:', keyword);
 				const response = await fetch(`${PUBLIC_API_URL}/search?keyword=${encodeURIComponent(keyword)}`);
 				if (!response.ok) throw new Error('검색 실패');
 				const allResults = await response.json();
@@ -55,7 +53,6 @@
 				console.error('검색 에러:', error);
 				throw error;
 			}
-			*/
 		})();
 	});
 
@@ -72,7 +69,7 @@
 </script>
 
 {#await searchPromise}
-	<div class="flex min-h-[400px] w-full items-center justify-center">
+	<div class="flex min-h-[236px] w-full items-center justify-center">
 		<div class="border-primary h-12 w-12 animate-spin rounded-full border-t-2"></div>
 	</div>
 {:then results}
