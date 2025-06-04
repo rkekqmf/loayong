@@ -75,8 +75,6 @@
 	{/if}
 </p>
 
-<p>Current time: {time}</p>
-
 <p>Are you happy?</p>
 <TestComponent name="John" age={20} favouriteColors={['green', 'blue', 'red']} isAvailable onYes={onAnswerYes} onNo={onAnswerNo} />
 <p style="font-size: 50px;">{isHappy ? '😀' : '😥'}</p>
