@@ -51,7 +51,7 @@
 	<div class="mb-2 gap-4 rounded-lg border border-text-100 p-4">
 		<h3 class="mb-3 text-lg">파티 설정</h3>
 		<div class="mb-3 flex gap-2">
-			{#each [{ size: 4, text: '4인 파티' }, { size: 8, text: '8인 파티' }, { size: 16, text: '16인 파티' }] as { size, text }}
+			{#each [{ size: 4, text: '4인 파티' }, { size: 8, text: '8인 파티' }, { size: 16, text: 'TEST 파티' }] as { size, text }}
 				<button
 					class="relative rounded-lg px-4 py-2 transition-colors duration-300 ease-in-out
 					{partySize === size ? 'bg-accent-100' : 'bg-primary-100'} 
