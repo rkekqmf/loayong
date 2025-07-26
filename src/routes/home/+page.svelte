@@ -8,11 +8,17 @@
 
 	let Homework: any;
 	let ClassInfo: any;
+	let RemainingBlood: any;
 
 	if (browser) {
-		Promise.all([import('./components/homework.svelte'), import('./components/class-info.svelte')]).then(([hw, info]) => {
+		Promise.all([
+			import('./components/homework.svelte'), 
+			import('./components/class-info.svelte'),
+			import('./components/blood.svelte')
+		]).then(([hw, info, rb]) => {
 			Homework = hw.default;
 			ClassInfo = info.default;
+			RemainingBlood = rb.default;
 			isLoading = false;
 		});
 	}
@@ -26,8 +32,9 @@
 		}
 		return [
 			{ id: 'calculator', label: '계산기', checked: true },
-			{ id: 'homework', label: '과제', checked: true },
+			{ id: 'homework', label: '캐릭터', checked: true },
 			{ id: 'classInfo', label: '수업 정보', checked: true },
+			{ id: 'remainingBlood', label: '잔혈', checked: true },
 			{ id: 'test1', label: '테스트 1', checked: false },
 			{ id: 'test2', label: '테스트 2', checked: false },
 			{ id: 'test3', label: '테스트 3', checked: false }
@@ -296,6 +303,8 @@
 				<svelte:component this={Homework} />
 			{:else if activeTab === 'classInfo'}
 				<svelte:component this={ClassInfo} />
+			{:else if activeTab === 'remainingBlood'}
+				<svelte:component this={RemainingBlood} />
 			{/if}
 		</section>
 

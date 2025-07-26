@@ -32,7 +32,7 @@
 	<a href="/" class="text-2xl font-bold transition-colors hover:text-emerald-300"> MO </a>
 
 	<div class="flex items-center gap-2">
-		<div class="flex">
+		<!-- <div class="flex">
 			<div class="h-[65px] w-[100px] bg-primary-100 text-center">primary-100</div>
 			<div class="h-[65px] w-[100px] bg-primary-200 text-center">primary-200</div>
 			<div class="h-[65px] w-[100px] bg-primary-300 text-center">primary-300</div>
@@ -43,7 +43,7 @@
 			<div class="h-[65px] w-[100px] bg-bg-100 text-center">bg-100</div>
 			<div class="h-[65px] w-[100px] bg-bg-200 text-center">bg-200</div>
 			<div class="h-[65px] w-[100px] bg-bg-300 text-center">bg-300</div>
-		</div>
+		</div> -->
 		<!-- {#each themes as { id, icon, label }}
 			<button class="rounded-full p-2 transition-all duration-200 hover:scale-110 {$theme === id ? 'bg-app-input' : ''}" on:click={() => setTheme(id)} title={label}>
 				<span class="text-xl">{icon}</span>
