@@ -6,11 +6,20 @@ export default {
 	theme: {
 		extend: {
 			colors: {
+				// PANTONE 테마 색상
 				primary: {
-					100: 'var(--primary-100)',
-					200: 'var(--primary-200)',
-					300: 'var(--primary-300)'
+					50: '#E8E3D9',   // Cannoli Cream
+					100: '#E5C1A1',  // Cream Tan
+					200: '#CBB994',  // Safari
+					300: '#C0A693',  // Sirocco
+					400: '#B28C7C',  // Chanterelle
+					500: '#A67C6D',  // Mocha Mousse (메인)
+					600: '#905E50',  // Baltic Amber
+					700: '#5D4A46',  // Chocolate Martini
+					800: '#4A3A36',
+					900: '#3A2D2A',
 				},
+				// 기존 색상 유지
 				accent: {
 					100: 'var(--accent-100)',
 					200: 'var(--accent-200)'
@@ -26,8 +35,8 @@ export default {
 				}
 			},
 			boxShadow: {
-				primary: `8px 8px 30px -5px rgba(255, 255, 255, 0.2),
-                   -8px 8px 30px -5px rgba(255, 255, 255, 0.2)`
+				primary: `8px 8px 30px -5px rgba(166, 124, 109, 0.3),
+                   -8px 8px 30px -5px rgba(166, 124, 109, 0.3)`
 			},
 			screens: {
 				sm: '640px',

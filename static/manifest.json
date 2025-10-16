@@ -1,0 +1,17 @@
+{
+  "name": "로스트아크 전적",
+  "short_name": "모요",
+  "description": "로스트아크 캐릭터 정보 검색 및 전적 확인",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#A6FF4D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

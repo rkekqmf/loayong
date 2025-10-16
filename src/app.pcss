@@ -87,3 +87,45 @@ body {
 	border: 0;
 	border-radius: 8px;
 }
+
+/* 뿅하는 애니메이션 */
+@keyframes bounceIn {
+	0% {
+		opacity: 0;
+		transform: scale(0.3) translateY(-20px);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.1) translateY(0);
+	}
+	70% {
+		transform: scale(0.95);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+@keyframes bounceOut {
+	0% {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+	30% {
+		transform: scale(1.1) translateY(-10px);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0.3) translateY(20px);
+	}
+}
+
+/* 검색바 애니메이션 클래스 */
+.search-bar-enter {
+	animation: bounceIn 0.4s ease-out forwards;
+}
+
+.search-bar-exit {
+	animation: bounceOut 0.3s ease-in forwards;
+}
